@@ -15,10 +15,10 @@ public class GameWindow extends JFrame{
 
     BufferedImage background;
     BufferedImage player;
-    private int playerX;
-    private int playerY;
-    private int height = 800;
-    private int width = 800;
+    private float playerX;
+    private float playerY;
+    private int heightWindow = 800;
+    private int widthWindow = 800;
 
     BufferedImage backBufferImage;
     Graphics2D backBufferGraphics2D;
@@ -28,7 +28,7 @@ public class GameWindow extends JFrame{
         loadImages();
 
         playerX = background.getWidth()/2;
-        playerY = this.getHeight() - player.getHeight() - 40;
+        playerY = this.heightWindow - player.getHeight();
 
         setupInputs();
         this.setVisible(true);
@@ -36,46 +36,10 @@ public class GameWindow extends JFrame{
         backBufferImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         backBufferGraphics2D = (Graphics2D) backBufferImage.getGraphics();
 
-        //        this.addWindowListener(new WindowListener() {
-//            @Override
-//            public void windowOpened(WindowEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void windowClosed(WindowEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void windowIconified(WindowEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void windowDeiconified(WindowEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void windowActivated(WindowEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void windowDeactivated(WindowEvent e) {
-//
-//            }
-//        });
-        //        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void setupInputs() {
+
         this.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -89,13 +53,13 @@ public class GameWindow extends JFrame{
                         if (playerX <= background.getWidth() - player.getWidth()) playerX += 5;
                         break;
                     case KeyEvent.VK_LEFT:
-                        if (playerX >= 0) playerX -= 5;
+                        if (playerX >= 0) playerX -= 5;System.out.println(e.getKeyCode());
                         break;
                     case KeyEvent.VK_DOWN:
-                        if (playerY <= height - player.getHeight() - 40) playerY += 5;
+                        if (playerY <= heightWindow - player.getHeight()) playerY += 5;
                         break;
                     case KeyEvent.VK_UP:
-                        if (playerY >= 30) playerY -= 5;
+                        if (playerY >= 70) playerY -= 5;
                         break;
                     default:
                         break;
@@ -116,10 +80,14 @@ public class GameWindow extends JFrame{
                 backBufferGraphics2D.setColor(Color.BLACK);
                 backBufferGraphics2D.fillRect(0, 0,this.getWidth(),this.getHeight());
 
-                int hightBackground = this.getHeight() - background.getHeight();
-                backBufferGraphics2D.drawImage(background,0, hightBackground, null);
-                backBufferGraphics2D.drawImage(player, playerX, playerY, null);
-                repaint();
+                int heightBackground = this.getHeight() - background.getHeight();
+                for (int i = heightBackground; i <= 0 ; i++) {
+                    backBufferGraphics2D.drawImage(background,0, i, null);
+                    backBufferGraphics2D.drawImage(player, (int)playerX, (int)playerY - 40, null);
+                    Graphics2D g2d = (Graphics2D) this.getGraphics();
+                    g2d.drawImage(backBufferImage, 0, 0, null);
+                }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -136,7 +104,7 @@ public class GameWindow extends JFrame{
     }
 
     private void setupWindow() {
-        this.setSize(width, height);
+        this.setSize(widthWindow, heightWindow);
 
         this.setTitle("Touhou - Remade by sonng");
         this.setResizable(false);
@@ -148,12 +116,4 @@ public class GameWindow extends JFrame{
             }
         });
     }
-
-    @Override
-    public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D)g;
-        //cast, convert
-        g2d.drawImage(backBufferImage, 0, 0, null);
-    }
-
 }
