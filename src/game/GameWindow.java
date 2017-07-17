@@ -3,34 +3,30 @@ package game;
 import game.Players.Enemy;
 import game.Players.Player;
 import game.Players.PlayerSpell;
+import game.bases.Common;
+import game.bases.Contraints;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by sonng on 7/9/2017.
  */
-public class GameWindow extends JFrame {
+public class GameWindow extends JFrame implements Common{
 
-    private long currentTime;
-    private long lastTimeUpdateBackground = -1;
-    private long lastTimeUpdatePlayerSpell = 0;
-    private long lastTimeUpdateEnemies = 0;
-    private int heightWindow = 800;
-    private int widthWindow = 800;
     private int backgroundY;
     private boolean xPressed = false;
-    long startTime;
 
     BufferedImage background;
     BufferedImage backBufferImage;
-
     Graphics2D backBufferGraphics2D;
 
     private Player player;
@@ -42,7 +38,7 @@ public class GameWindow extends JFrame {
         setupWindow();
         loadImages();
 
-        player = new Player(background.getWidth(), heightWindow);
+        player = new Player(background.getWidth(), this.getHeight(), new Contraints(50, this.getHeight() - 50, 10, background.getWidth() - 10));
         playerSpells = new ArrayList<PlayerSpell>();
         enemies1 = new ArrayList<Enemy>();
         enemies2 = new ArrayList<Enemy>();
@@ -52,7 +48,6 @@ public class GameWindow extends JFrame {
 
         backBufferImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         backBufferGraphics2D = (Graphics2D) backBufferImage.getGraphics();
-
     }
 
     private void setupInputs() {
@@ -79,49 +74,44 @@ public class GameWindow extends JFrame {
     public void loop() {
         backgroundY = this.getHeight() - background.getHeight();
         while (true) {
-            if (lastTimeUpdateBackground == -1) {
-                lastTimeUpdateBackground = System.currentTimeMillis();
-            }
-
-            currentTime = System.currentTimeMillis();
-            if (currentTime - lastTimeUpdateBackground > 17) {
+            try {
+                Thread.sleep(7);
                 update();
                 render();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            if (backgroundY >= 0) return;
         }
     }
 
     private void update() {
         //Background
-        if (backgroundY < 0) backgroundY += 3;
+        if (backgroundY < 0) backgroundY += BACKGROUND_SPEED;
 
         //Player
         player.updateLocation();
-        player.updateImage();
+//        player.updateImage();
 
         //PlayerSpells
-        if (xPressed) {
-            PlayerSpell playerSpell = new PlayerSpell(this.player);
-            currentTime = System.currentTimeMillis();
-            if (lastTimeUpdatePlayerSpell == 0 || currentTime - lastTimeUpdatePlayerSpell > 300) {
-                playerSpells.add(playerSpell);
-                lastTimeUpdatePlayerSpell = System.currentTimeMillis();
-            }
+        player.coolDown();
+        if (xPressed == true) {
+            player.castSpell(playerSpells);
+            player.coolDown();
         }
         for (int i = 0; i < playerSpells.size(); i++) {
             PlayerSpell playerSpell = playerSpells.get(i);
             playerSpell.update();
-            if (playerSpell.getY() <= 0) playerSpells.remove(playerSpell);
+            if (playerSpell.getPosition().y <= 0) playerSpells.remove(playerSpell);
         }
         //Enemies
         if (enemies1.size() == 0 || (enemies1.size() <= 10 && enemies1.get(enemies1.size()-1).getY() > 50)) {
-            enemies1.add(new Enemy(100, 0));
-            enemies2.add(new Enemy(200, 0));
+            Random random = new Random();
+            enemies1.add(new Enemy(random.nextInt(390), 0));
+            enemies2.add(new Enemy(random.nextInt(390), 0));
         }
         for (int i = 0; i < enemies1.size(); i++) {
-            enemies1.get(i).update();
-            enemies2.get(i).update();
+            enemies1.get(i).update1();
+            enemies2.get(i).update2();
         }
     }
 
@@ -135,8 +125,9 @@ public class GameWindow extends JFrame {
             playerSpell.render(backBufferGraphics2D);
         }
         for (int i = 0; i < enemies1.size(); i++) {
+            Enemy enemy = enemies2.get(i);
             enemies1.get(i).render(backBufferGraphics2D);
-            enemies2.get(i).render(backBufferGraphics2D);
+            enemy.render(backBufferGraphics2D);
         }
 
         Graphics2D g2d = (Graphics2D) this.getGraphics();
@@ -152,7 +143,7 @@ public class GameWindow extends JFrame {
     }
 
     private void setupWindow() {
-        this.setSize(widthWindow, heightWindow);
+        this.setSize(Common.WIDTH, Common.HEIGHT);
         this.setTitle("Touhou - Remade by sonng");
         this.setResizable(false);
         this.addWindowListener(new WindowAdapter() {

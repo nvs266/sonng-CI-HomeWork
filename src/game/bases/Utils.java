@@ -1,4 +1,4 @@
-package game.Players;
+package game.bases;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
