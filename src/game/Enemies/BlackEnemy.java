@@ -46,8 +46,10 @@ public class BlackEnemy extends GameObject{
                         Vector2D newVector2d = new Vector2D(Player.instancePlayer.x - this.x, Player.instancePlayer.y - this.y);
                         newVector2d = newVector2d.nomalize();
 
-                        for (float i = 4; i >= 3.5; i -= 0.005) {
+                        for (float i = 4; i >= 3; i -= 0.005) {
                             GameObject.add(new EnemyBullet(newVector2d.x*i, newVector2d.y*i, this.getPosition()));
+                            GameObject.add(new EnemyBullet((float)(newVector2d.x*Math.cos(Math.PI / 20) - newVector2d.y*Math.sin(Math.PI / 20))*i, (float)(newVector2d.x*Math.sin(Math.PI / 20) + newVector2d.y*Math.cos(Math.PI / 20))*i, this.getPosition()));
+                            GameObject.add(new EnemyBullet((float)(newVector2d.x*Math.cos(-Math.PI / 20) - newVector2d.y*Math.sin(-Math.PI / 20))*i, (float)(newVector2d.x*Math.sin(-Math.PI / 20) + newVector2d.y*Math.cos(-Math.PI / 20))*i, this.getPosition()));
                         }
                         bullet1Disable = true;
                         frameCounterBullet.reset();
