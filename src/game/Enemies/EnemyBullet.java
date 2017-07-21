@@ -10,20 +10,30 @@ import java.awt.*;
 public class EnemyBullet extends GameObject implements Common {
 
     private ImageRenderer imageRenderer;
+
+    private FrameCounter frameCounter;
+
     private float dx;
     private float dy;
 
     public EnemyBullet(float dx, float dy, Vector2D vector2D) {
         super();
         this.set(vector2D);
+
         imageRenderer = new ImageRenderer(Utils.loadAssetImage("enemies/bullets/pink.png"));
+
         this.dx = dx;
         this.dy = dy;
+
+        frameCounter = new FrameCounter(30);
+        frameCounter.reset();
     }
 
     @Override
     public void run() {
-        this.addUp(2*dx, 2*dy);
+        if (frameCounter.run()) {
+            this.addUp(2*dx, 2*dy);
+        } else this.addUp(dx,dy);
     }
 
     @Override

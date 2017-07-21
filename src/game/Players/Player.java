@@ -37,10 +37,10 @@ public class Player extends GameObject implements Common{
         }
         straightImgaes[6] = new ImageRenderer(Utils.loadAssetImage("players/straight/6.png"));
         this.imageRenderer = this.straightImgaes[0];
-        frameCounterChangeImage = new FrameCounter(5);
+        frameCounterChangeImage = new FrameCounter(7);
 
         this.set((width - imageRenderer.image.getWidth()) / 2, HEIGHT - imageRenderer.image.getHeight() / 2);
-        this.contraints = new Contraints(imageRenderer.image.getHeight(), HEIGHT - imageRenderer.image.getHeight(),  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
+        this.contraints = new Contraints(imageRenderer.image.getHeight(), HEIGHT - imageRenderer.image.getHeight() / 2,  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
 
         this.coolDownCounter = new FrameCounter(COOLDOWN_SPELL);
 

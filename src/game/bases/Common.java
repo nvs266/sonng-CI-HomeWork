@@ -5,9 +5,9 @@ package game.bases;
  */
 public interface  Common {
     public final int WIDTH = 800;
-    public final int HEIGHT = 800;
+    public final int HEIGHT = 500;
     public final int PINK_SPEED = 1;
-    public final int PLAYER_SPEED = 4;
+    public final int PLAYER_SPEED = 3;
     public final int SPELL_SPEED = 6;
     public final int BACKGROUND_SPEED = 2;
     public final int COOLDOWN_SPELL = 10;
