@@ -11,8 +11,7 @@ import java.util.Random;
  */
 public class PinkEnemy extends GameObject implements Common{
 
-    private ImageRenderer imageRenderer1;
-    private ImageRenderer imageRenderer2;
+    private ImageRenderer[] currentImageRenderer;
 
     private FrameCounter frameCounterStillStand;
     private FrameCounter frameCounterChangePicture;
@@ -25,9 +24,11 @@ public class PinkEnemy extends GameObject implements Common{
     public PinkEnemy(int x, int y) {
         super();
 
-        this.imageRenderer1 = new ImageRenderer(Utils.loadAssetImage("enemies/level0/pink/0.png"));
-        this.imageRenderer2 = new ImageRenderer(Utils.loadAssetImage("enemies/level0/pink/2.png"));
-        imageRenderer = imageRenderer2;
+        currentImageRenderer = new ImageRenderer[4];
+        for (int i = 0; i < 4; i++) {
+            currentImageRenderer[i] = new ImageRenderer(Utils.loadAssetImage(String.format("enemies/level0/pink/%d.png", i)));
+        }
+        imageRenderer = currentImageRenderer[0];
 
         set(x - imageRenderer.image.getWidth() / 2, y);
 
@@ -49,8 +50,19 @@ public class PinkEnemy extends GameObject implements Common{
     @Override
     public void updatePicture() {
         if (frameCounterChangePicture.run()) {
-            if (imageRenderer == imageRenderer1) imageRenderer = imageRenderer2;
-            else imageRenderer = imageRenderer1;
+            for (int i = 0; i < 4; i++) {
+                if (imageRenderer == currentImageRenderer[i]) {
+                    switch (i) {
+                        case 3:
+                            imageRenderer = currentImageRenderer[0];
+                            break;
+                        default:
+                            imageRenderer = currentImageRenderer[i+1];
+                            break;
+                    }
+                    break;
+                }
+            }
             frameCounterChangePicture.reset();
         }
     }
