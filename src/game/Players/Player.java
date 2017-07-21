@@ -1,6 +1,7 @@
 package game.Players;
 
 import game.bases.*;
+import game.inputs.InputManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -9,102 +10,77 @@ import java.util.ArrayList;
 /**
  * Created by sonng on 7/12/2017.
  */
-public class Player extends Vector2D implements Common{
+public class Player extends GameObject implements Common{
 
     private ImageRenderer leftImage;
     private ImageRenderer rightImage;
     private ImageRenderer straightImgae;
-    private ImageRenderer currentImage;
+
+    public static Player instancePlayer;
+
+    InputManager inputManager;
     Contraints contraints;
     FrameCounter coolDownCounter;
 
-    boolean spellDisable = false;
-    private boolean UP, DOWN, LEFT, RIGHT, STANDSTILL;
+    boolean spellDisable = true;
 
-    public Player(float boundX, float boundY, Contraints contraints) {
+    public Player(int width, int height, InputManager inputManager) {
         //Set first location
         super();
-        this.contraints = contraints;
+        this.inputManager = inputManager;
 
         //Load Image
         this.leftImage = new ImageRenderer(Utils.loadAssetImage("players/left/0.png"));
         this.rightImage = new ImageRenderer(Utils.loadAssetImage("players/right/0.png"));
         this.straightImgae = new ImageRenderer(Utils.loadAssetImage("players/straight/0.png"));
-        this.currentImage = this.straightImgae;
+        this.imageRenderer = this.straightImgae;
 
-        this.set(boundX / 2, boundY - currentImage.image.getHeight());
-        //Set first status
-        STANDSTILL = true;
-        UP = false;
-        RIGHT = false;
-        LEFT = false;
-        DOWN = false;
+        this.set((width - imageRenderer.image.getWidth()) / 2, HEIGHT - imageRenderer.image.getHeight() / 2);
+        this.contraints = new Contraints(imageRenderer.image.getHeight(), HEIGHT - imageRenderer.image.getHeight(),  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
 
         this.coolDownCounter = new FrameCounter(COOLDOWN_SPELL);
+
+        instancePlayer = this;
     }
 
-    public void updateLocation() {
-        int dx = 0;
-        int dy = 0;
-        if (RIGHT) dx += PLAYER_SPEED;
-        if (LEFT) dx -= PLAYER_SPEED;
-        if (UP) dy -= PLAYER_SPEED;
-        if (DOWN) dy += PLAYER_SPEED;
-        this.addUp(dx, dy);
-        contraints.make(this.getPosition());
+    @Override
+    public void run() {
+        move();
+        coolDown();
+        if (inputManager.xPressed) castSpell();
     }
 
-    public void render(Graphics2D g2D) {
-        if (STANDSTILL) currentImage = straightImgae;
-        if (!LEFT && RIGHT) currentImage = rightImage;
-        if (LEFT && !RIGHT) currentImage = leftImage;
-        currentImage.render(g2D, this.getPosition());
-    }
-
-    public void setKeyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                UP = true;
-                break;
-            case KeyEvent.VK_DOWN:
-                DOWN = true;
-                break;
-            case KeyEvent.VK_LEFT:
-                LEFT = true;
-                break;
-            case KeyEvent.VK_RIGHT:
-                RIGHT = true;
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void setKeyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                UP = false;
-                break;
-            case KeyEvent.VK_DOWN:
-                DOWN = false;
-                break;
-            case KeyEvent.VK_LEFT:
-                LEFT = false;
-                break;
-            case KeyEvent.VK_RIGHT:
-                RIGHT = false;
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void castSpell(ArrayList<PlayerSpell> playerSpells) {
+    private void castSpell() {
         if (!spellDisable) {
             PlayerSpell playerSpell = new PlayerSpell(this);
-            playerSpells.add(playerSpell);
+            GameObject.add(playerSpell);
+
             spellDisable = true;
         }
+    }
+
+
+    @Override
+    public void updatePicture() {
+        if (inputManager.leftPressed) imageRenderer = leftImage;
+        else if (inputManager.rightPressed) imageRenderer = rightImage;
+        else imageRenderer = straightImgae;
+    }
+
+    private void move() {
+        if (inputManager.upPressed) {
+            this.y -= PLAYER_SPEED;
+        }
+        if (inputManager.downPressed) {
+            this.y += PLAYER_SPEED;
+        }
+        if (inputManager.leftPressed) {
+            this.x -= PLAYER_SPEED;
+        }
+        if (inputManager.rightPressed) {
+            this.x += PLAYER_SPEED;
+        }
+        this.contraints.make(this.getPosition());
     }
 
     public void coolDown() {
@@ -115,4 +91,5 @@ public class Player extends Vector2D implements Common{
             }
         }
     }
+
 }

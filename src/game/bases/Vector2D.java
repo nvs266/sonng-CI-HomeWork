@@ -52,12 +52,12 @@ public class Vector2D {
         return (float) Math.sqrt(x*x + y*y);
     }
 
-    public void multiplyBy(int a) {
+    public void multiplyBy(float a) {
         this.x *= a;
         this.y *= a;
     }
 
-    public Vector2D multiply(int a) {
+    public Vector2D multiply(float a) {
         return new Vector2D(this.x * a, this.y * a);
     }
 
