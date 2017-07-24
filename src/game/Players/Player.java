@@ -3,15 +3,21 @@ package game.Players;
 import game.bases.*;
 import game.inputs.InputManager;
 
+import java.awt.*;
+
 /**
  * Created by sonng on 7/12/2017.
  */
-public class Player extends GameObject implements Common{
+public class Player extends GameObject implements Setting {
+
+    public BoxCollider boxCollider;
 
     private ImageRenderer[] leftImages;
     private ImageRenderer[] rightImages;
     private ImageRenderer[] straightImgaes;
 
+    public Sphere sphereLeft;
+    public Sphere sphereRight;
     public static Player instancePlayer;
 
     InputManager inputManager;
@@ -39,16 +45,25 @@ public class Player extends GameObject implements Common{
         this.imageRenderer = this.straightImgaes[0];
         frameCounterChangeImage = new FrameCounter(7);
 
-        this.set((width - imageRenderer.image.getWidth()) / 2, HEIGHT - imageRenderer.image.getHeight() / 2);
-        this.contraints = new Contraints(imageRenderer.image.getHeight(), HEIGHT - imageRenderer.image.getHeight() / 2,  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
+        this.set((width - imageRenderer.image.getWidth()) / 2, WINDOW_HEIGHT - imageRenderer.image.getHeight() / 2);
+        this.contraints = new Contraints(imageRenderer.image.getHeight(), WINDOW_HEIGHT - imageRenderer.image.getHeight() / 2,  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
 
         this.coolDownCounter = new FrameCounter(COOLDOWN_SPELL);
 
         instancePlayer = this;
+
+        boxCollider = new BoxCollider(this.imageRenderer.image.getWidth(), this.imageRenderer.image.getHeight());
+        this.children.add(boxCollider);
+
+        sphereLeft = new Sphere(-20, 0);
+        this.children.add(sphereLeft);
+        sphereRight = new Sphere(20, 0);
+        this.children.add(sphereRight);
     }
 
     @Override
-    public void run() {
+    public void run(Vector2D parentPosition) {
+        super.run(parentPosition);
         move();
         coolDown();
         if (inputManager.xPressed) castSpell();
@@ -58,7 +73,8 @@ public class Player extends GameObject implements Common{
         if (!spellDisable) {
             PlayerSpell playerSpell = new PlayerSpell(this);
             GameObject.add(playerSpell);
-
+            sphereLeft.shoot();
+            sphereRight.shoot();
             spellDisable = true;
         }
     }
@@ -66,6 +82,7 @@ public class Player extends GameObject implements Common{
 
     @Override
     public void updatePicture() {
+        super.updatePicture();
         boolean checkImage = false;
         if (inputManager.leftPressed) {
             for (int i = 0; i < 6; i++) {
@@ -148,5 +165,4 @@ public class Player extends GameObject implements Common{
             }
         }
     }
-
 }

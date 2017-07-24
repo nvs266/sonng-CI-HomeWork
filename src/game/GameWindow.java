@@ -1,11 +1,9 @@
 package game;
 
-import game.Enemies.BlackEnemy;
-import game.Enemies.PinkEnemy;
 import game.Enemies.EnemySpawner;
 import game.Players.Player;
 import game.backgrounds.Background;
-import game.bases.Common;
+import game.bases.Setting;
 import game.bases.GameObject;
 import game.inputs.InputManager;
 
@@ -17,7 +15,7 @@ import java.awt.image.BufferedImage;
 /**
  * Created by sonng on 7/9/2017.
  */
-public class GameWindow extends JFrame implements Common{
+public class GameWindow extends JFrame implements Setting {
 
     BufferedImage backBufferImage;
     Graphics2D backBufferGraphics2D;
@@ -39,7 +37,7 @@ public class GameWindow extends JFrame implements Common{
     }
 
     private void addPlayer() {
-        Player player = new Player(Background.getInstanceBackground().imageRenderer.image.getWidth(), Common.HEIGHT, inputManager);
+        Player player = new Player(Background.getInstanceBackground().imageRenderer.image.getWidth(), Setting.WINDOW_HEIGHT, inputManager);
         GameObject.add(player);
     }
 
@@ -70,7 +68,7 @@ public class GameWindow extends JFrame implements Common{
     public void loop() {
         while (true) {
             try {
-                Thread.sleep(7);
+                Thread.sleep(Setting.FRAME_DELAY);
                 run();
                 render();
             } catch (InterruptedException e) {
@@ -81,6 +79,8 @@ public class GameWindow extends JFrame implements Common{
 
     private void run() {
         GameObject.runAll();
+        GameObject.setStatusAll();
+        GameObject.removeObjects();
     }
 
     private void render() {
@@ -95,7 +95,7 @@ public class GameWindow extends JFrame implements Common{
     }
 
     private void setupWindow() {
-        this.setSize(Common.WIDTH, Common.HEIGHT);
+        this.setSize(Setting.WINDOW_WIDTH, Setting.WINDOW_HEIGHT);
         this.setTitle("Touhou - Remade by sonng");
         this.setResizable(false);
         this.addWindowListener(new WindowAdapter() {

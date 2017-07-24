@@ -3,6 +3,7 @@ package game.Enemies;
 import game.backgrounds.Background;
 import game.bases.FrameCounter;
 import game.bases.GameObject;
+import game.bases.Vector2D;
 
 import java.util.Random;
 
@@ -21,7 +22,8 @@ public class EnemySpawner extends GameObject{
     }
 
     @Override
-    public void run() {
+    public void run(Vector2D parentPosition) {
+        super.run(parentPosition);
         if (frameCounter.run() && Background.getInstanceBackground().y <= -200) {
             GameObject.add(new PinkEnemy((int) new Random().nextInt(Background.getInstanceBackground().imageRenderer.image.getWidth()), 0));
             frameCounter.reset();

@@ -10,16 +10,18 @@ public class Vector2D {
     public float x;
     public float y;
 
-    public Vector2D getPosition() {
-        return this;
+    public static final Vector2D ZERO = new Vector2D(0, 0);
+
+    @Override
+    public String toString() {
+        return "Vector2D{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
+    public  Vector2D() {
+        this(0, 0);
     }
 
     public Vector2D(float x, float y) {
@@ -27,8 +29,12 @@ public class Vector2D {
         this.y = y;
     }
 
-    public  Vector2D() {
-        this(0, 0);
+    public Vector2D getPosition() {
+        return this;
+    }
+
+    public float getY() {
+        return y;
     }
 
     public void addUp(float x, float y) {

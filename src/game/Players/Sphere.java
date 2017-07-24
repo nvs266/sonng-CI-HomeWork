@@ -1,35 +1,30 @@
 package game.Players;
 
+import game.Enemies.BlackEnemy;
 import game.bases.*;
 
-/**
- * Created by sonng on 7/12/2017.
- */
-public class PlayerSpell extends GameObject implements Setting {
+public class Sphere extends GameObject {
 
     private ImageRenderer[] imageRenderers;
     private FrameCounter frameCounterChangeImage;
 
-    public PlayerSpell(Player player) {
+    public Sphere(float x, float y) {
         super();
+        set(x, y);
         frameCounterChangeImage = new FrameCounter(5);
 
         imageRenderers = new ImageRenderer[4];
         for (int i = 0; i < 4; i++) {
-            imageRenderers[i] = new ImageRenderer(Utils.loadAssetImage(String.format("player-spells/a/%d.png", i)));
+            imageRenderers[i] = new ImageRenderer(Utils.loadAssetImage(String.format("sphere/%d.png", i)));
         }
         imageRenderer = imageRenderers[0];
 
-        set(player.getPosition().add(0, - Player.instancePlayer.imageRenderer.image.getHeight()));
     }
 
     @Override
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
-        this.y -= SPELL_SPEED;
-        if (y < 0) visible = false;
     }
-
 
     @Override
     public void updatePicture() {
@@ -48,6 +43,19 @@ public class PlayerSpell extends GameObject implements Setting {
                 }
             }
             frameCounterChangeImage.reset();
+        }
+    }
+
+    public void shoot() {
+        if (BlackEnemy.intanceBlack != null) {
+            Vector2D tartget =  BlackEnemy.intanceBlack.getPosition();
+
+            Vector2D bulletVelocity = tartget.subtract(this.screenPosition).nomalize();
+
+            SphereBullet sphereBullet = new SphereBullet(this);
+            sphereBullet.velocity.set(bulletVelocity);
+
+            GameObject.add(sphereBullet);
         }
     }
 }

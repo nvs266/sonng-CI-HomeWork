@@ -9,8 +9,12 @@ import game.bases.*;
  */
 public class BlackEnemy extends GameObject{
 
+    public static BlackEnemy intanceBlack;
+
     public FrameCounter frameCounterBullet;
     public FrameCounter frameCounterMove;
+
+    public BoxCollider boxCollider;
 
     public boolean bullet1Disable = true;
     public boolean bulletDisable = true;
@@ -28,11 +32,17 @@ public class BlackEnemy extends GameObject{
         frameCounterBullet.reset();
 
         frameCounterMove = new FrameCounter(300);
+
+        boxCollider = new BoxCollider(this.imageRenderer.image.getWidth() - 10, this.imageRenderer.image.getHeight() - 10);
+        children.add(boxCollider);
+
+        intanceBlack = this;
     }
 
     @Override
-    public void run() {
-        if (this.y <= 100) this.addUp(0, Common.BLACK_SPEED);
+    public void run(Vector2D parentPosition) {
+        super.run(parentPosition);
+        if (this.y <= 100) this.addUp(0, Setting.BLACK_SPEED);
         else {
             if (frameCounterMove.run()) {
                 bulletDisable = true;
@@ -53,7 +63,7 @@ public class BlackEnemy extends GameObject{
     }
 
     private void moveRight() {
-        this.addUp(Common.BLACK_SPEED, 0);
+        this.addUp(Setting.BLACK_SPEED, 0);
         if (this.x >= 300) {
             left = false;
             frameCounterMove.reset();
@@ -61,7 +71,7 @@ public class BlackEnemy extends GameObject{
     }
 
     private void moveLeft() {
-        this.addUp(-Common.BLACK_SPEED, 0);
+        this.addUp(-Setting.BLACK_SPEED, 0);
         if (this.x <= 100) {
             left = true;
             frameCounterMove.reset();
@@ -91,4 +101,5 @@ public class BlackEnemy extends GameObject{
             frameCounterBullet.reset();
         }
     }
+
 }

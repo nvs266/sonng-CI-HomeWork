@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Created by sonng on 7/16/2017.
  */
-public class PinkEnemy extends GameObject implements Common{
+public class PinkEnemy extends GameObject implements Setting {
 
     private ImageRenderer[] currentImageRenderer;
 
@@ -32,7 +32,7 @@ public class PinkEnemy extends GameObject implements Common{
 
         set(x - imageRenderer.image.getWidth() / 2, y);
 
-        maxY = new Random().nextInt(HEIGHT / 3) + 50;
+        maxY = new Random().nextInt(WINDOW_HEIGHT / 3) + 50;
 
         frameCounterChangePicture = new FrameCounter(5);
         frameCounterChangePicture.reset();
@@ -68,7 +68,8 @@ public class PinkEnemy extends GameObject implements Common{
     }
 
     @Override
-    public void run() {
+    public void run(Vector2D parentPositon) {
+        super.run(parentPositon);
         if (y >= maxY && bulletDiasable) {
             if (frameCounterShoot.run()) {
 
@@ -106,6 +107,6 @@ public class PinkEnemy extends GameObject implements Common{
 
     @Override
     public void render(Graphics2D graphics2D) {
-        if (this.x < WIDTH/2 - this.imageRenderer.image.getWidth())imageRenderer.render(graphics2D, this.getPosition());
+        if (this.x < WINDOW_WIDTH /2 - this.imageRenderer.image.getWidth())imageRenderer.render(graphics2D, this.getPosition());
     }
 }

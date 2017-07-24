@@ -3,11 +3,12 @@ package game.Enemies;
 import game.bases.*;
 
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * Created by sonng on 7/18/2017.
  */
-public class EnemyBullet extends GameObject implements Common {
+public class EnemyBullet extends GameObject implements Setting {
 
     private ImageRenderer imageRenderer;
 
@@ -30,7 +31,8 @@ public class EnemyBullet extends GameObject implements Common {
     }
 
     @Override
-    public void run() {
+    public void run(Vector2D parentPosiotion) {
+        super.run(parentPosiotion);
         if (frameCounter.run()) {
             this.addUp(2*dx, 2*dy);
         } else this.addUp(dx,dy);
@@ -38,6 +40,6 @@ public class EnemyBullet extends GameObject implements Common {
 
     @Override
     public void render(Graphics2D graphics2D) {
-        if (this.x < WIDTH/2 - imageRenderer.image.getWidth()) this.imageRenderer.render(graphics2D, this.getPosition());
+        if (this.x < WINDOW_WIDTH /2 - imageRenderer.image.getWidth()) this.imageRenderer.render(graphics2D, this.getPosition());
     }
 }
