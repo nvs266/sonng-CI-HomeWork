@@ -25,6 +25,10 @@ public class SphereBullet extends GameObject implements Setting{
 
         boxCollider = new BoxCollider(this.imageRenderer.image.getWidth(), this.imageRenderer.image.getHeight());
         this.children.add(boxCollider);
+
+        subject = SUBJECTS.SPHERE_BNULLET;
+        boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
+        this.children.add(boxCollider);
     }
 
     @Override
@@ -36,9 +40,10 @@ public class SphereBullet extends GameObject implements Setting{
             this.getPosition().addUp(velocity);
             if (boxCollider.collideWith(BlackEnemy.intanceBlack.boxCollider)) {
                 this.visible = false;
-                BlackEnemy.intanceBlack.visible = false;
+                BlackEnemy.life--;
             }
         } else this.getPosition().addUp(0, -Setting.SPHERE_BULLET_SPEED);
+        if (isOutOfMap()) visible = false;
     }
 
     @Override

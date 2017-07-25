@@ -9,8 +9,8 @@ import java.awt.*;
  * Created by sonng on 7/12/2017.
  */
 public class Player extends GameObject implements Setting {
-
-    public BoxCollider boxCollider;
+    public static int life;
+    public static int score;
 
     private ImageRenderer[] leftImages;
     private ImageRenderer[] rightImages;
@@ -28,9 +28,10 @@ public class Player extends GameObject implements Setting {
     boolean spellDisable = true;
 
     public Player(int width, int height, InputManager inputManager) {
-        //Set first location
         super();
         this.inputManager = inputManager;
+        life = 100;
+        score = 0;
 
         //Load Image
         leftImages = new ImageRenderer[6];
@@ -45,20 +46,25 @@ public class Player extends GameObject implements Setting {
         this.imageRenderer = this.straightImgaes[0];
         frameCounterChangeImage = new FrameCounter(7);
 
+        //Set first location
         this.set((width - imageRenderer.image.getWidth()) / 2, WINDOW_HEIGHT - imageRenderer.image.getHeight() / 2);
+        //  Contraints
         this.contraints = new Contraints(imageRenderer.image.getHeight(), WINDOW_HEIGHT - imageRenderer.image.getHeight() / 2,  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
 
         this.coolDownCounter = new FrameCounter(COOLDOWN_SPELL);
 
         instancePlayer = this;
 
-        boxCollider = new BoxCollider(this.imageRenderer.image.getWidth(), this.imageRenderer.image.getHeight());
-        this.children.add(boxCollider);
-
+        // sphere
         sphereLeft = new Sphere(-20, 0);
         this.children.add(sphereLeft);
         sphereRight = new Sphere(20, 0);
         this.children.add(sphereRight);
+
+        subject = SUBJECTS.PLAYER;
+
+        boxCollider = new BoxCollider(imageRenderer.getWidth() / 2, imageRenderer.getHeight() / 2);
+        this.children.add(boxCollider);
     }
 
     @Override
@@ -163,6 +169,24 @@ public class Player extends GameObject implements Setting {
                 spellDisable = false;
                 coolDownCounter.reset();
             }
+        }
+    }
+
+    @Override
+    public void render(Graphics2D graphics2D) {
+        super.render(graphics2D);
+        graphics2D.setColor(Color.red);
+        graphics2D.setFont(new Font("serif", Font.BOLD, 30));
+        graphics2D.drawString("Life: " + life, 500, 150);
+        graphics2D.drawString("Score: " + score, 500, 200);
+    }
+
+    @Override
+    public void checkHitBox(GameObject other) {
+        BoxCollider boxColliderOther = other.boxCollider;
+        if (other.subject == SUBJECTS.ENEMY_BULLET && this.boxCollider.collideWith(boxColliderOther)) {
+            Player.life--;
+            other.visible = false;
         }
     }
 }

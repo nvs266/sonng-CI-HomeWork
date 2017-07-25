@@ -1,16 +1,12 @@
 package game.Enemies;
 
+import game.Players.Player;
 import game.bases.*;
-
-import java.awt.*;
-import java.util.Vector;
 
 /**
  * Created by sonng on 7/18/2017.
  */
 public class EnemyBullet extends GameObject implements Setting {
-
-    private ImageRenderer imageRenderer;
 
     private FrameCounter frameCounter;
 
@@ -28,18 +24,27 @@ public class EnemyBullet extends GameObject implements Setting {
 
         frameCounter = new FrameCounter(30);
         frameCounter.reset();
+
+        subject = SUBJECTS.ENEMY_BULLET;
+        boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
+        this.children.add(boxCollider);
     }
 
     @Override
     public void run(Vector2D parentPosiotion) {
         super.run(parentPosiotion);
         if (frameCounter.run()) {
-            this.addUp(2*dx, 2*dy);
+            this.addUp(4*dx, 4*dy);
         } else this.addUp(dx,dy);
+        if (isOutOfMap()) visible = false;
     }
 
     @Override
-    public void render(Graphics2D graphics2D) {
-        if (this.x < WINDOW_WIDTH /2 - imageRenderer.image.getWidth()) this.imageRenderer.render(graphics2D, this.getPosition());
+    public void checkHitBox(GameObject other) {
+        BoxCollider boxColliderOther = other.boxCollider;
+        if (other.subject == SUBJECTS.PLAYER && this.boxCollider.collideWith(boxColliderOther)) {
+            Player.life--;
+            this.visible = false;
+        }
     }
 }

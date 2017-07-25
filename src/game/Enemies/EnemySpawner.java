@@ -12,11 +12,11 @@ import java.util.Random;
  */
 public class EnemySpawner extends GameObject{
 
-    FrameCounter frameCounter = new FrameCounter(70);
+    FrameCounter frameCounter = new FrameCounter(20);
     boolean blackEnemyDisable = true;
     public EnemySpawner() {
         frameCounter.reset();
-        for (int i = 1; i <= 99; i++) {
+        for (int i = 1; i <= 19; i++) {
             frameCounter.run();
         }
     }

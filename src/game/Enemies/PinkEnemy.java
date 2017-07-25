@@ -45,6 +45,10 @@ public class PinkEnemy extends GameObject implements Setting {
 
         frameCounterShoot = new FrameCounter(25);
         frameCounterShoot.reset();
+
+        subject = SUBJECTS.PINK_ENEMY;
+        boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
+        this.children.add(boxCollider);
     }
 
     @Override
@@ -103,10 +107,20 @@ public class PinkEnemy extends GameObject implements Setting {
             }
         }
         else this.addUp(0, PINK_SPEED);
+        if (isOutOfMap()) visible = false;
     }
 
     @Override
     public void render(Graphics2D graphics2D) {
         if (this.x < WINDOW_WIDTH /2 - this.imageRenderer.image.getWidth())imageRenderer.render(graphics2D, this.getPosition());
+    }
+
+    @Override
+    public void checkHitBox(GameObject other) {
+        BoxCollider boxColliderOther = other.boxCollider;
+        if (other.subject == SUBJECTS.PLAYER_SPELL && this.boxCollider.collideWith(boxColliderOther)) {
+            Player.score++;
+            this.visible = false;
+        }
     }
 }

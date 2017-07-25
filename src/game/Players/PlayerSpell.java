@@ -21,13 +21,17 @@ public class PlayerSpell extends GameObject implements Setting {
         imageRenderer = imageRenderers[0];
 
         set(player.getPosition().add(0, - Player.instancePlayer.imageRenderer.image.getHeight()));
+
+        subject = SUBJECTS.PLAYER_SPELL;
+        boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
+        this.children.add(boxCollider);
     }
 
     @Override
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
         this.y -= SPELL_SPEED;
-        if (y < 0) visible = false;
+        if (isOutOfMap()) visible = false;
     }
 
 
@@ -48,6 +52,14 @@ public class PlayerSpell extends GameObject implements Setting {
                 }
             }
             frameCounterChangeImage.reset();
+        }
+    }
+
+    @Override
+    public void checkHitBox(GameObject other) {
+        if (other.subject == SUBJECTS.PINK_ENEMY && this.boxCollider.collideWith(other.boxCollider)) {
+            Player.score++;
+            other.visible = false;
         }
     }
 }

@@ -19,6 +19,7 @@ public class Sphere extends GameObject {
         }
         imageRenderer = imageRenderers[0];
 
+        subject = SUBJECTS.SPHERE;
     }
 
     @Override
