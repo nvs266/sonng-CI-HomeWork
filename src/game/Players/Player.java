@@ -61,7 +61,6 @@ public class Player extends GameObject implements Setting {
         sphereRight = new Sphere(20, 0);
         this.children.add(sphereRight);
 
-        subject = SUBJECTS.PLAYER;
 
         boxCollider = new BoxCollider(imageRenderer.getWidth() / 2, imageRenderer.getHeight() / 2);
         this.children.add(boxCollider);
@@ -181,12 +180,4 @@ public class Player extends GameObject implements Setting {
         graphics2D.drawString("Score: " + score, 500, 200);
     }
 
-    @Override
-    public void checkHitBox(GameObject other) {
-        BoxCollider boxColliderOther = other.boxCollider;
-        if (other.subject == SUBJECTS.ENEMY_BULLET && this.boxCollider.collideWith(boxColliderOther)) {
-            Player.life--;
-            other.visible = false;
-        }
-    }
 }

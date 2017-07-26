@@ -2,6 +2,7 @@ package game.Enemies;
 
 import game.Players.Player;
 import game.bases.*;
+import game.bases.physics.PhysicsBody;
 
 import java.awt.*;
 import java.util.Random;
@@ -9,7 +10,7 @@ import java.util.Random;
 /**
  * Created by sonng on 7/16/2017.
  */
-public class PinkEnemy extends GameObject implements Setting {
+public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
 
     private ImageRenderer[] currentImageRenderer;
 
@@ -46,7 +47,6 @@ public class PinkEnemy extends GameObject implements Setting {
         frameCounterShoot = new FrameCounter(25);
         frameCounterShoot.reset();
 
-        subject = SUBJECTS.PINK_ENEMY;
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
     }
@@ -107,7 +107,7 @@ public class PinkEnemy extends GameObject implements Setting {
             }
         }
         else this.addUp(0, PINK_SPEED);
-        if (isOutOfMap()) visible = false;
+        if (isOutOfMap()) active = false;
     }
 
     @Override
@@ -116,11 +116,7 @@ public class PinkEnemy extends GameObject implements Setting {
     }
 
     @Override
-    public void checkHitBox(GameObject other) {
-        BoxCollider boxColliderOther = other.boxCollider;
-        if (other.subject == SUBJECTS.PLAYER_SPELL && this.boxCollider.collideWith(boxColliderOther)) {
-            Player.score++;
-            this.visible = false;
-        }
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
     }
 }

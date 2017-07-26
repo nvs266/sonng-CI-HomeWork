@@ -32,9 +32,4 @@ public class Background extends GameObject implements Setting {
     public void render(Graphics2D graphics2D) {
         graphics2D.drawImage(imageRenderer.image, 0, (int) this.getY(), null);
     }
-
-    @Override
-    public void setStatus(boolean parentEnable) {
-        visible = true;
-    }
 }

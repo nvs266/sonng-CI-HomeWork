@@ -79,9 +79,7 @@ public class GameWindow extends JFrame implements Setting {
 
     private void run() {
         GameObject.runAll();
-        GameObject.setStatusAll();
         GameObject.removeObjects();
-        GameObject.checkHitBoxAll();
     }
 
     private void render() {

@@ -1,11 +1,14 @@
 package game.Players;
 
+import game.Enemies.PinkEnemy;
 import game.bases.*;
+import game.bases.physics.Physics;
+import game.bases.physics.PhysicsBody;
 
 /**
  * Created by sonng on 7/12/2017.
  */
-public class PlayerSpell extends GameObject implements Setting {
+public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
 
     private ImageRenderer[] imageRenderers;
     private FrameCounter frameCounterChangeImage;
@@ -22,7 +25,6 @@ public class PlayerSpell extends GameObject implements Setting {
 
         set(player.getPosition().add(0, - Player.instancePlayer.imageRenderer.image.getHeight()));
 
-        subject = SUBJECTS.PLAYER_SPELL;
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
     }
@@ -31,7 +33,8 @@ public class PlayerSpell extends GameObject implements Setting {
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
         this.y -= SPELL_SPEED;
-        if (isOutOfMap()) visible = false;
+        hitEnemy();
+        if (isOutOfMap()) active = false;
     }
 
 
@@ -55,11 +58,16 @@ public class PlayerSpell extends GameObject implements Setting {
         }
     }
 
-    @Override
-    public void checkHitBox(GameObject other) {
-        if (other.subject == SUBJECTS.PINK_ENEMY && this.boxCollider.collideWith(other.boxCollider)) {
-            Player.score++;
-            other.visible = false;
+    private void hitEnemy() {
+        PinkEnemy enemy = Physics.bodyInRect(this.getBoxCollider(), PinkEnemy.class);
+        if (enemy != null) {
+            enemy.active = false;
+            this.active = false;
         }
+    }
+
+    @Override
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
     }
 }

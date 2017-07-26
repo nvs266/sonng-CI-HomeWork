@@ -42,7 +42,6 @@ public class BlackEnemy extends GameObject{
 
         intanceBlack = this;
 
-        subject = SUBJECTS.BLACK_ENEMY;
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
     }
