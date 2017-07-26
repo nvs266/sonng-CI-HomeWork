@@ -14,20 +14,23 @@ public class EnemyBullet extends GameObject implements Setting {
     private float dx;
     private float dy;
 
-    public EnemyBullet(float dx, float dy, Vector2D vector2D) {
+    public EnemyBullet() {
         super();
-        this.set(vector2D);
 
         imageRenderer = new ImageRenderer(Utils.loadAssetImage("enemies/bullets/pink.png"));
-
-        this.dx = dx;
-        this.dy = dy;
 
         frameCounter = new FrameCounter(30);
         frameCounter.reset();
 
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
+    }
+
+    public void set(float dx, float dy, Vector2D vector2D) {
+        this.dx = dx;
+        this.dy = dy;
+        this.set(vector2D);
+        frameCounter.reset();
     }
 
     @Override

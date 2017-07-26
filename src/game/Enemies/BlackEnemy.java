@@ -44,6 +44,7 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
         this.children.add(boxCollider);
     }
 
+
     @Override
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
@@ -70,8 +71,9 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
             } else {
                 alpha = (float) (Math.PI / 20);
             }
-            GameObject.add(new EnemyBullet((float) (newVector2d.x * Math.cos(alpha) - newVector2d.y * Math.sin(alpha)) * 2,
-                    (float) (newVector2d.x * Math.sin(alpha) + newVector2d.y * Math.cos(alpha)) * 2, this.getPosition()));
+            EnemyBullet enemyBullet = GameObjectPool.recycle(EnemyBullet.class);
+            enemyBullet.set((float) (newVector2d.x * Math.cos(alpha) - newVector2d.y * Math.sin(alpha)) * 2,
+                    (float) (newVector2d.x * Math.sin(alpha) + newVector2d.y * Math.cos(alpha)) * 2, this.getPosition());
             frameCounter.reset();
         }
         if(this.frameCounterBullet.run() && !bulletDisable) {
@@ -103,7 +105,8 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
             newVector2d = newVector2d.nomalize();
 
             for (float i = 0; i < 2 * Math.PI; i += Math.PI / 30) {
-                GameObject.add(new EnemyBullet((float) (newVector2d.x * Math.cos(i) - newVector2d.y * Math.sin(i)), (float) (newVector2d.x * Math.sin(i) + newVector2d.y * Math.cos(i)), this.getPosition()));
+                EnemyBullet enemyBullet = GameObjectPool.recycle(EnemyBullet.class);
+                enemyBullet.set((float) (newVector2d.x * Math.cos(i) - newVector2d.y * Math.sin(i)), (float) (newVector2d.x * Math.sin(i) + newVector2d.y * Math.cos(i)), this.getPosition());
             }
             bullet1Disable = false;
             frameCounterBullet.reset();
@@ -112,9 +115,18 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
             newVector2d = newVector2d.nomalize();
 
             for (float i = 4; i >= 3; i -= 0.05) {
-                GameObject.add(new EnemyBullet(newVector2d.x * i, newVector2d.y * i, this.getPosition()));
-                GameObject.add(new EnemyBullet((float) (newVector2d.x * Math.cos(Math.PI / 30) - newVector2d.y * Math.sin(Math.PI / 30)) * i, (float) (newVector2d.x * Math.sin(Math.PI / 30) + newVector2d.y * Math.cos(Math.PI / 30)) * i, this.getPosition()));
-                GameObject.add(new EnemyBullet((float) (newVector2d.x * Math.cos(-Math.PI / 30) - newVector2d.y * Math.sin(-Math.PI / 30)) * i, (float) (newVector2d.x * Math.sin(-Math.PI / 30) + newVector2d.y * Math.cos(-Math.PI / 30)) * i, this.getPosition()));
+                EnemyBullet enemyBullet = GameObjectPool.recycle(EnemyBullet.class);
+                enemyBullet.set(newVector2d.x * i, newVector2d.y * i, this.getPosition());
+
+                EnemyBullet enemyBullet1 = GameObjectPool.recycle(EnemyBullet.class);
+                enemyBullet1.set((float) (newVector2d.x * Math.cos(Math.PI / 30) - newVector2d.y * Math.sin(Math.PI / 30)) * i,
+                        (float) (newVector2d.x * Math.sin(Math.PI / 30) + newVector2d.y * Math.cos(Math.PI / 30)) * i,
+                            this.getPosition());
+
+                EnemyBullet enemyBullet2 = GameObjectPool.recycle(EnemyBullet.class);
+                enemyBullet2.set((float) (newVector2d.x * Math.cos(-Math.PI / 30) - newVector2d.y * Math.sin(-Math.PI / 30)) * i,
+                        (float) (newVector2d.x * Math.sin(-Math.PI / 30) + newVector2d.y * Math.cos(-Math.PI / 30)) * i,
+                        this.getPosition());
             }
             bullet1Disable = true;
             frameCounterBullet.reset();

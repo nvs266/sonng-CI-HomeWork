@@ -86,10 +86,14 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
                 Vector2D vector2D1 = new Vector2D((float)(newVector2d.x*Math.cos(3.1416/9)) - (float)(newVector2d.y*Math.sin(3.1416/9)), (float)(newVector2d.x*Math.sin(3.1416/9)) + (float)(newVector2d.y*Math.cos(3.1416/9)) );
                 Vector2D vector2D2 = new Vector2D((float)(newVector2d.x*Math.cos(-3.1416/9)) - (float)(newVector2d.y*Math.sin(-3.1416/9)), (float)(newVector2d.x*Math.sin(-3.1416/9)) + (float)(newVector2d.y*Math.cos(-3.1416/9)) );
 
-                GameObject.add(new EnemyBullet(newVector2d.x, newVector2d.y , this.getPosition()));
-                GameObject.add(new EnemyBullet(vector2D1.x, vector2D1.y, this.getPosition()));
-                GameObject.add(new EnemyBullet(vector2D2.x, vector2D2.y, this.getPosition()));
+                EnemyBullet enemyBullet = GameObjectPool.recycle(EnemyBullet.class);
+                enemyBullet.set(newVector2d.x, newVector2d.y , this.getPosition());
 
+                EnemyBullet enemyBullet1 = GameObjectPool.recycle(EnemyBullet.class);
+                enemyBullet1.set(vector2D1.x, vector2D1.y, this.getPosition());
+
+                EnemyBullet enemyBullet2 = GameObjectPool.recycle(EnemyBullet.class);
+                enemyBullet2.set(vector2D2.x, vector2D2.y, this.getPosition());
 
                 bulletDiasable = false;
 
