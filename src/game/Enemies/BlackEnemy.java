@@ -3,16 +3,17 @@ package game.Enemies;
 import game.Players.Player;
 import game.backgrounds.Background;
 import game.bases.*;
+import game.bases.physics.PhysicsBody;
 
 import java.awt.*;
 
 /**
  * Created by sonng on 7/19/2017.
  */
-public class BlackEnemy extends GameObject{
+public class BlackEnemy extends GameObject implements PhysicsBody{
     public static int life = 500;
 
-    public static BlackEnemy intanceBlack;
+    public static BlackEnemy intanceBlack = null;
 
     public FrameCounter frameCounterBullet;
     public FrameCounter frameCounterMove;
@@ -37,12 +38,9 @@ public class BlackEnemy extends GameObject{
         frameCounterMove = new FrameCounter(300);
         frameCounter = new FrameCounter(5);
 
-        boxCollider = new BoxCollider(this.imageRenderer.image.getWidth() - 10, this.imageRenderer.image.getHeight() - 10);
-        children.add(boxCollider);
-
         intanceBlack = this;
 
-        boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
+        this.boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
     }
 
@@ -128,6 +126,12 @@ public class BlackEnemy extends GameObject{
         super.render(graphics2D);
         graphics2D.setColor(Color.BLUE);
         graphics2D.setFont(new Font("serif", Font.BOLD, 30));
+        if (life < 0) life = 0;
         graphics2D.drawString("BOSS: "+ life, 500, 100);
+    }
+
+    @Override
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
     }
 }

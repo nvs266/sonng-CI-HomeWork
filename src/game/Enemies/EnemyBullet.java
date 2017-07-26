@@ -2,6 +2,7 @@ package game.Enemies;
 
 import game.Players.Player;
 import game.bases.*;
+import game.bases.physics.Physics;
 
 /**
  * Created by sonng on 7/18/2017.
@@ -36,5 +37,14 @@ public class EnemyBullet extends GameObject implements Setting {
             this.addUp(4*dx, 4*dy);
         } else this.addUp(dx,dy);
         if (isOutOfMap()) active = false;
+        hitPlayer();
+    }
+
+    private void hitPlayer() {
+        Player hitPlayer = Physics.bodyInRect(this.boxCollider, Player.class);
+        if (hitPlayer != null) {
+            Player.life--;
+            this.active = false;
+        }
     }
 }

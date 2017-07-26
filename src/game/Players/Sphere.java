@@ -8,9 +8,8 @@ public class Sphere extends GameObject {
     private ImageRenderer[] imageRenderers;
     private FrameCounter frameCounterChangeImage;
 
-    public Sphere(float x, float y) {
+    public Sphere() {
         super();
-        set(x, y);
         frameCounterChangeImage = new FrameCounter(5);
 
         imageRenderers = new ImageRenderer[4];
@@ -47,15 +46,7 @@ public class Sphere extends GameObject {
     }
 
     public void shoot() {
-        if (BlackEnemy.intanceBlack != null) {
-            Vector2D tartget =  BlackEnemy.intanceBlack.getPosition();
-
-            Vector2D bulletVelocity = tartget.subtract(this.screenPosition).nomalize();
-
-            SphereBullet sphereBullet = new SphereBullet(this);
-            sphereBullet.velocity.set(bulletVelocity);
-
-            GameObject.add(sphereBullet);
-        }
+        SphereBullet sphereBullet = GameObjectPool.recycle(SphereBullet.class);
+        sphereBullet.set(this.screenPosition);
     }
 }

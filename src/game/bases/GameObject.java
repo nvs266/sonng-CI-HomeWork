@@ -1,5 +1,6 @@
 package game.bases;
 
+import game.Players.PlayerSpell;
 import game.backgrounds.Background;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
@@ -31,6 +32,11 @@ public class GameObject extends Vector2D implements Setting{
 
 
     public boolean active = true;
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -51,16 +57,18 @@ public class GameObject extends Vector2D implements Setting{
 
     public static void runAll() {
         for (GameObject gameObject: gameObjects) {
-            gameObject.run(Vector2D.ZERO);
+            if (gameObject.active) {
+                gameObject.run(Vector2D.ZERO);
+            }
         }
         gameObjects.addAll(newGameObjects);
         newGameObjects.clear();
     }
 
-
     public ImageRenderer imageRenderer;
+
     public void render(Graphics2D graphics2D) {
-        if (imageRenderer != null) {
+        if (imageRenderer != null && active) {
             imageRenderer.render(graphics2D, this.screenPosition);
         }
         for (GameObject child: children) {
@@ -70,7 +78,9 @@ public class GameObject extends Vector2D implements Setting{
 
     public static void renderAll(Graphics2D graphics2D) {
         for (GameObject gameObject: gameObjects) {
-            gameObject.render(graphics2D);
+            if (gameObject.isActive()) {
+                gameObject.render(graphics2D);
+            }
         }
 
     }
@@ -87,26 +97,6 @@ public class GameObject extends Vector2D implements Setting{
         }
     }
 
-    private static Vector<GameObject> removeAllObjects = new Vector<>();
-
-    public  void removeObject(boolean parentVisible) {
-        if (!parentVisible) {
-            for (GameObject child: this.children) {
-                child.removeObject(false);
-            }
-            removeAllObjects.add(this);
-        }
-    }
-
-    public static void removeObjects() {
-        for (Iterator<GameObject> iterator = gameObjects.iterator(); iterator.hasNext();) {
-            GameObject gameObject = iterator.next();
-            gameObject.removeObject(gameObject.active);
-        }
-        gameObjects.removeAll(removeAllObjects);
-        removeAllObjects.clear();
-    }
-
     public boolean isOutOfMap() {
         if (getPosition().x + imageRenderer.getWidth() / 2 < 0 ||
                 getPosition().x + imageRenderer.getWidth() / 2 > Background.getInstanceBackground().imageRenderer.getWidth() ||
@@ -114,5 +104,4 @@ public class GameObject extends Vector2D implements Setting{
                 getPosition().y - imageRenderer.getHeight() / 2 > WINDOW_HEIGHT) return true;
         return false;
     }
-
 }

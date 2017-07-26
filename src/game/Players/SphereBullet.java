@@ -1,15 +1,18 @@
 package game.Players;
 
 import game.Enemies.BlackEnemy;
+import game.Enemies.PinkEnemy;
 import game.bases.*;
+import game.bases.physics.Physics;
+import game.bases.physics.PhysicsBody;
 
-public class SphereBullet extends GameObject implements Setting{
+public class SphereBullet extends GameObject implements Setting, PhysicsBody{
     private ImageRenderer[] imageRenderers;
     private FrameCounter frameCounterChangeImage;
     public Vector2D velocity;
     private BoxCollider boxCollider;
 
-    public SphereBullet(Sphere sphere) {
+    public SphereBullet() {
         super();
         frameCounterChangeImage = new FrameCounter(5);
 
@@ -19,12 +22,7 @@ public class SphereBullet extends GameObject implements Setting{
         }
         imageRenderer = imageRenderers[0];
 
-        set(sphere.screenPosition.add(0, - sphere.imageRenderer.image.getHeight()));
-
         velocity = new Vector2D(0,0);
-
-        boxCollider = new BoxCollider(this.imageRenderer.image.getWidth(), this.imageRenderer.image.getHeight());
-        this.children.add(boxCollider);
 
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
@@ -33,16 +31,32 @@ public class SphereBullet extends GameObject implements Setting{
     @Override
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
-        if (BlackEnemy.intanceBlack.active) {
+        if (BlackEnemy.intanceBlack != null) {
             Vector2D tartget =  BlackEnemy.intanceBlack.getPosition();
             velocity = tartget.subtract(this.getPosition()).nomalize().multiply(Setting.SPHERE_BULLET_SPEED);
             this.getPosition().addUp(velocity);
-            if (boxCollider.collideWith(BlackEnemy.intanceBlack.boxCollider)) {
-                this.active = false;
-                BlackEnemy.life--;
-            }
+        } else if (PinkEnemy.intancePinkEnemy != null) {
+            Vector2D tartget =  PinkEnemy.intancePinkEnemy.getPosition();
+            velocity = tartget.subtract(this.getPosition()).nomalize().multiply(Setting.SPHERE_BULLET_SPEED);
+            this.getPosition().addUp(velocity);
         } else this.getPosition().addUp(0, -Setting.SPHERE_BULLET_SPEED);
+        hitEnemy();
         if (isOutOfMap()) active = false;
+    }
+
+    private void hitEnemy() {
+        PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
+        if (hitPinkEnemy != null) {
+            Player.score++;
+            hitPinkEnemy.active = false;
+            this.active = false;
+        }
+        BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);
+        if (hitBlackEnemy != null) {
+            Player.score++;
+            BlackEnemy.life--;
+            this.active = false;
+        }
     }
 
     @Override
@@ -63,5 +77,10 @@ public class SphereBullet extends GameObject implements Setting{
             }
             frameCounterChangeImage.reset();
         }
+    }
+
+    @Override
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
     }
 }

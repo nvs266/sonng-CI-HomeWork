@@ -1,5 +1,6 @@
 package game.Players;
 
+import game.Enemies.BlackEnemy;
 import game.Enemies.PinkEnemy;
 import game.bases.*;
 import game.bases.physics.Physics;
@@ -13,7 +14,7 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
     private ImageRenderer[] imageRenderers;
     private FrameCounter frameCounterChangeImage;
 
-    public PlayerSpell(Player player) {
+    public PlayerSpell() {
         super();
         frameCounterChangeImage = new FrameCounter(5);
 
@@ -22,8 +23,6 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
             imageRenderers[i] = new ImageRenderer(Utils.loadAssetImage(String.format("player-spells/a/%d.png", i)));
         }
         imageRenderer = imageRenderers[0];
-
-        set(player.getPosition().add(0, - Player.instancePlayer.imageRenderer.image.getHeight()));
 
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
@@ -59,9 +58,16 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
     }
 
     private void hitEnemy() {
-        PinkEnemy enemy = Physics.bodyInRect(this.getBoxCollider(), PinkEnemy.class);
-        if (enemy != null) {
-            enemy.active = false;
+        PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
+        if (hitPinkEnemy != null) {
+            Player.score++;
+            hitPinkEnemy.setActive(false);
+            this.active = false;
+        }
+        BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);
+        if (hitBlackEnemy != null) {
+            Player.score++;
+            BlackEnemy.life--;
             this.active = false;
         }
     }

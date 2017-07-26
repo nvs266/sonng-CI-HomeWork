@@ -1,5 +1,6 @@
 package game.Enemies;
 
+import com.sun.corba.se.spi.activation.ORBPortInfoListHelper;
 import game.Players.Player;
 import game.bases.*;
 import game.bases.physics.PhysicsBody;
@@ -12,17 +13,18 @@ import java.util.Random;
  */
 public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
 
+    public static PinkEnemy intancePinkEnemy = null;
     private ImageRenderer[] currentImageRenderer;
 
     private FrameCounter frameCounterStillStand;
     private FrameCounter frameCounterChangePicture;
     private FrameCounter frameCounterShoot;
 
-    private boolean bulletDiasable = true;
+    public boolean bulletDiasable = true;
     private int maxY;
     private int rand = new Random().nextInt(2);
 
-    public PinkEnemy(int x, int y) {
+    public PinkEnemy() {
         super();
 
         currentImageRenderer = new ImageRenderer[4];
@@ -51,6 +53,7 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
         this.children.add(boxCollider);
     }
 
+
     @Override
     public void updatePicture() {
         if (frameCounterChangePicture.run()) {
@@ -74,7 +77,7 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
     @Override
     public void run(Vector2D parentPositon) {
         super.run(parentPositon);
-        if (y >= maxY && bulletDiasable) {
+        if (y >= maxY && bulletDiasable && active) {
             if (frameCounterShoot.run()) {
 
                 Vector2D newVector2d = new Vector2D(Player.instancePlayer.x - this.x, Player.instancePlayer.y - this.y);
@@ -107,6 +110,7 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
             }
         }
         else this.addUp(0, PINK_SPEED);
+        intancePinkEnemy = this;
         if (isOutOfMap()) active = false;
     }
 

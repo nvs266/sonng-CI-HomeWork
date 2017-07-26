@@ -1,5 +1,6 @@
 package game;
 
+import game.Enemies.BlackEnemy;
 import game.Enemies.EnemySpawner;
 import game.Players.Player;
 import game.backgrounds.Background;
@@ -71,6 +72,21 @@ public class GameWindow extends JFrame implements Setting {
                 Thread.sleep(Setting.FRAME_DELAY);
                 run();
                 render();
+                if (Player.life <= 0) {
+                    Graphics2D g2d = (Graphics2D) this.getGraphics();
+                    g2d.setColor(Color.MAGENTA);
+                    g2d.setFont(new Font("serif", Font.BOLD, 40));
+                    g2d.drawString("YOU LOSE, Score: "+ Player.score, 200, 300 );
+                    break;
+                }
+                if (BlackEnemy.life <= 0) {
+                    Graphics2D g2d = (Graphics2D) this.getGraphics();
+                    g2d.setColor(Color.MAGENTA);
+                    g2d.setFont(new Font("serif", Font.BOLD, 40));
+                    g2d.drawString("YOU WIN :D", 200, 300 );
+                    break;
+                }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -79,7 +95,6 @@ public class GameWindow extends JFrame implements Setting {
 
     private void run() {
         GameObject.runAll();
-        GameObject.removeObjects();
     }
 
     private void render() {

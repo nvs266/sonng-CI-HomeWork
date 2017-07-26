@@ -1,6 +1,10 @@
 package game.Players;
 
+import game.Enemies.BlackEnemy;
+import game.Enemies.PinkEnemy;
 import game.bases.*;
+import game.bases.physics.Physics;
+import game.bases.physics.PhysicsBody;
 import game.inputs.InputManager;
 
 import java.awt.*;
@@ -8,7 +12,7 @@ import java.awt.*;
 /**
  * Created by sonng on 7/12/2017.
  */
-public class Player extends GameObject implements Setting {
+public class Player extends GameObject implements Setting, PhysicsBody {
     public static int life;
     public static int score;
 
@@ -22,10 +26,12 @@ public class Player extends GameObject implements Setting {
 
     InputManager inputManager;
     Contraints contraints;
-    FrameCounter coolDownCounter;
+    FrameCounter coolDownSpell;
+    FrameCounter coolDownBullet;
     FrameCounter frameCounterChangeImage;
 
     boolean spellDisable = true;
+    boolean bulletDisable = true;
 
     public Player(int width, int height, InputManager inputManager) {
         super();
@@ -51,16 +57,18 @@ public class Player extends GameObject implements Setting {
         //  Contraints
         this.contraints = new Contraints(imageRenderer.image.getHeight(), WINDOW_HEIGHT - imageRenderer.image.getHeight() / 2,  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
 
-        this.coolDownCounter = new FrameCounter(COOLDOWN_SPELL);
+        this.coolDownSpell = new FrameCounter(COOLDOWN_SPELL);
+        this.coolDownBullet = new FrameCounter(40);
 
         instancePlayer = this;
 
         // sphere
-        sphereLeft = new Sphere(-20, 0);
+        sphereLeft = GameObjectPool.recycle(Sphere.class);
+        sphereLeft.set(-20, 0);
         this.children.add(sphereLeft);
-        sphereRight = new Sphere(20, 0);
+        sphereRight = GameObjectPool.recycle(Sphere.class);
+        sphereRight.set(20, 0);
         this.children.add(sphereRight);
-
 
         boxCollider = new BoxCollider(imageRenderer.getWidth() / 2, imageRenderer.getHeight() / 2);
         this.children.add(boxCollider);
@@ -70,17 +78,29 @@ public class Player extends GameObject implements Setting {
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
         move();
+        hitEnemy();
         coolDown();
         if (inputManager.xPressed) castSpell();
     }
 
+    private void hitEnemy() {
+        PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
+        BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);
+        if (hitBlackEnemy != null || hitPinkEnemy != null) {
+            Player.life--;
+        }
+    }
+
     private void castSpell() {
         if (!spellDisable) {
-            PlayerSpell playerSpell = new PlayerSpell(this);
-            GameObject.add(playerSpell);
+            PlayerSpell playerSpell = GameObjectPool.recycle(PlayerSpell.class);
+            playerSpell.set(this.x, this.y - imageRenderer.getHeight());
+            spellDisable = true;
+        }
+        if (!bulletDisable) {
             sphereLeft.shoot();
             sphereRight.shoot();
-            spellDisable = true;
+            bulletDisable = true;
         }
     }
 
@@ -164,9 +184,15 @@ public class Player extends GameObject implements Setting {
 
     public void coolDown() {
         if (spellDisable) {
-            if (coolDownCounter.run()) {
+            if (coolDownSpell.run()) {
                 spellDisable = false;
-                coolDownCounter.reset();
+                coolDownSpell.reset();
+            }
+        }
+        if (bulletDisable) {
+            if (coolDownBullet.run()) {
+                bulletDisable = false;
+                coolDownBullet.reset();
             }
         }
     }
@@ -176,8 +202,13 @@ public class Player extends GameObject implements Setting {
         super.render(graphics2D);
         graphics2D.setColor(Color.red);
         graphics2D.setFont(new Font("serif", Font.BOLD, 30));
+        if (life < 0) life = 0;
         graphics2D.drawString("Life: " + life, 500, 150);
         graphics2D.drawString("Score: " + score, 500, 200);
     }
 
+    @Override
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
+    }
 }
