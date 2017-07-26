@@ -1,12 +1,12 @@
 package game.bases;
 
-import game.Players.PlayerSpell;
 import game.backgrounds.Background;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
+import game.bases.renderers.ImageRenderer;
+import game.bases.renderers.Renderer;
 
 import java.awt.*;
-import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -65,14 +65,14 @@ public class GameObject extends Vector2D implements Setting{
         newGameObjects.clear();
     }
 
-    public ImageRenderer imageRenderer;
+    public Renderer imageRenderer;
 
     public void render(Graphics2D graphics2D) {
         if (imageRenderer != null && active) {
             imageRenderer.render(graphics2D, this.screenPosition);
-        }
-        for (GameObject child: children) {
-            child.render(graphics2D);
+            for (GameObject child: children) {
+                child.render(graphics2D);
+            }
         }
     }
 
@@ -83,18 +83,6 @@ public class GameObject extends Vector2D implements Setting{
             }
         }
 
-    }
-
-    public void updatePicture() {
-        for (GameObject child: children) {
-            child.updatePicture();
-        }
-    }
-
-    public static void updateAllPicture() {
-        for (GameObject gameObject: gameObjects) {
-            gameObject.updatePicture();
-        }
     }
 
     public boolean isOutOfMap() {

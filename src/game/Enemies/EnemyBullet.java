@@ -3,6 +3,8 @@ package game.Enemies;
 import game.Players.Player;
 import game.bases.*;
 import game.bases.physics.Physics;
+import game.bases.renderers.Animation;
+import game.bases.renderers.ImageRenderer;
 
 /**
  * Created by sonng on 7/18/2017.
@@ -17,7 +19,7 @@ public class EnemyBullet extends GameObject implements Setting {
     public EnemyBullet() {
         super();
 
-        imageRenderer = new ImageRenderer(Utils.loadAssetImage("enemies/bullets/pink.png"));
+        imageRenderer = new Animation(0, Utils.loadAssetImage("enemies/bullets/pink.png"));
 
         frameCounter = new FrameCounter(30);
         frameCounter.reset();

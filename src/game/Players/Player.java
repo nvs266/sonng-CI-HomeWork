@@ -2,12 +2,16 @@ package game.Players;
 
 import game.Enemies.BlackEnemy;
 import game.Enemies.PinkEnemy;
+import game.backgrounds.Background;
 import game.bases.*;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
+import game.bases.renderers.Animation;
+import game.bases.renderers.ImageRenderer;
 import game.inputs.InputManager;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by sonng on 7/12/2017.
@@ -16,9 +20,11 @@ public class Player extends GameObject implements Setting, PhysicsBody {
     public static int life;
     public static int score;
 
-    private ImageRenderer[] leftImages;
-    private ImageRenderer[] rightImages;
-    private ImageRenderer[] straightImgaes;
+    private Animation leftAnimation;
+    private Animation rightAnimation;
+    private Animation straightAnimation;
+
+    private BufferedImage[] images;
 
     public Sphere sphereLeft;
     public Sphere sphereRight;
@@ -28,34 +34,43 @@ public class Player extends GameObject implements Setting, PhysicsBody {
     Contraints contraints;
     FrameCounter coolDownSpell;
     FrameCounter coolDownBullet;
-    FrameCounter frameCounterChangeImage;
 
     boolean spellDisable = true;
     boolean bulletDisable = true;
 
-    public Player(int width, int height, InputManager inputManager) {
+    public Player(InputManager inputManager) {
         super();
         this.inputManager = inputManager;
         life = 100;
         score = 0;
 
         //Load Image
-        leftImages = new ImageRenderer[6];
-        rightImages = new ImageRenderer[6];
-        straightImgaes = new ImageRenderer[7];
+        images = new BufferedImage[6];
         for (int i = 0; i < 6; i++) {
-            leftImages[i] = new ImageRenderer(Utils.loadAssetImage(String.format("players/left/%d.png", i)));
-            rightImages[i] = new ImageRenderer(Utils.loadAssetImage(String.format("players/right/%d.png", i)));
-            straightImgaes[i] = new ImageRenderer(Utils.loadAssetImage(String.format("players/straight/%d.png", i)));
+            images[i] = Utils.loadAssetImage(String.format("players/left/%d.png", i));
         }
-        straightImgaes[6] = new ImageRenderer(Utils.loadAssetImage("players/straight/6.png"));
-        this.imageRenderer = this.straightImgaes[0];
-        frameCounterChangeImage = new FrameCounter(7);
+        leftAnimation = new Animation(7, images);
+
+        images = new BufferedImage[6];
+        for (int i = 0; i < 6; i++) {
+            images[i] = Utils.loadAssetImage(String.format("players/right/%d.png", i));
+        }
+        rightAnimation = new Animation(7, images);
+
+        images = new BufferedImage[7];
+        for (int i = 0; i < 7; i++) {
+            images[i] = Utils.loadAssetImage(String.format("players/straight/%d.png", i));
+        }
+        straightAnimation = new Animation(7, images);
+
+        imageRenderer = straightAnimation;
 
         //Set first location
-        this.set((width - imageRenderer.image.getWidth()) / 2, WINDOW_HEIGHT - imageRenderer.image.getHeight() / 2);
+        this.set(200, WINDOW_HEIGHT - images[0].getHeight() / 2);
         //  Contraints
-        this.contraints = new Contraints(imageRenderer.image.getHeight(), WINDOW_HEIGHT - imageRenderer.image.getHeight() / 2,  imageRenderer.image.getHeight() / 4, width - imageRenderer.image.getWidth() / 4);
+        this.contraints = new Contraints(images[0].getHeight(),
+                WINDOW_HEIGHT - images[0].getHeight() / 2,
+                images[0].getWidth() / 2, 400 - images[0].getWidth() / 2);
 
         this.coolDownSpell = new FrameCounter(COOLDOWN_SPELL);
         this.coolDownBullet = new FrameCounter(40);
@@ -104,68 +119,6 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         }
     }
 
-
-    @Override
-    public void updatePicture() {
-        super.updatePicture();
-        boolean checkImage = false;
-        if (inputManager.leftPressed) {
-            for (int i = 0; i < 6; i++) {
-                if (imageRenderer == leftImages[i]) {
-                    checkImage = true;
-                    if (!frameCounterChangeImage.run()) break;
-                    switch (i) {
-                        case 5:
-                            imageRenderer = leftImages[0];
-                            break;
-                        default:
-                            imageRenderer = leftImages[i+1];
-                            break;
-                    }
-                    frameCounterChangeImage.reset();
-                    break;
-                }
-            }
-            if (!checkImage) imageRenderer = leftImages[0];
-        } else if (inputManager.rightPressed) {
-            for (int i = 0; i < 6; i++) {
-                if (imageRenderer == rightImages[i]) {
-                    checkImage = true;
-                    if (!frameCounterChangeImage.run()) break;
-                    switch (i) {
-                        case 5:
-                            imageRenderer = rightImages[0];
-                            break;
-                        default:
-                            imageRenderer = rightImages[i+1];
-                            break;
-                    }
-                    frameCounterChangeImage.reset();
-                    break;
-                }
-            }
-            if (!checkImage) imageRenderer = rightImages[0];
-        } else {
-            for (int i = 0; i < 7; i++) {
-                if (imageRenderer == straightImgaes[i]) {
-                    checkImage = true;
-                    if (!frameCounterChangeImage.run()) break;
-                    switch (i) {
-                        case 6:
-                            imageRenderer = straightImgaes[0];
-                            break;
-                        default:
-                            imageRenderer = straightImgaes[i+1];
-                            break;
-                    }
-                    frameCounterChangeImage.reset();
-                    break;
-                }
-            }
-            if (!checkImage) imageRenderer = straightImgaes[0];
-        }
-    }
-
     private void move() {
         if (inputManager.upPressed) {
             this.y -= PLAYER_SPEED;
@@ -197,8 +150,18 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         }
     }
 
+    private void checkStatus() {
+        imageRenderer = straightAnimation;
+        if (inputManager.leftPressed && !inputManager.rightPressed) {
+            imageRenderer = leftAnimation;
+        } else if (inputManager.rightPressed && !inputManager.leftPressed) {
+            imageRenderer = rightAnimation;
+        }
+    }
+
     @Override
     public void render(Graphics2D graphics2D) {
+        checkStatus();
         super.render(graphics2D);
         graphics2D.setColor(Color.red);
         graphics2D.setFont(new Font("serif", Font.BOLD, 30));

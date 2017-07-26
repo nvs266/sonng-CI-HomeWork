@@ -4,35 +4,45 @@ import game.Players.Player;
 import game.backgrounds.Background;
 import game.bases.*;
 import game.bases.physics.PhysicsBody;
+import game.bases.renderers.Animation;
+import game.bases.renderers.ImageRenderer;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by sonng on 7/19/2017.
  */
 public class BlackEnemy extends GameObject implements PhysicsBody{
-    public static int life = 500;
-
     public static BlackEnemy intanceBlack = null;
-
+    public static int life = 200;
+    public static float alpha = 0;
     public FrameCounter frameCounterBullet;
     public FrameCounter frameCounterMove;
     public FrameCounter frameCounter;
-
     public BoxCollider boxCollider;
-
     public boolean bullet1Disable = true;
     public boolean bulletDisable = true;
-
     public boolean left = false;
-    public static float alpha = 0;
+    private BufferedImage[] images;
+    private Animation leftAnmimation;
+    private Animation rightAnimation;
+    private Animation straightAnimation;
 
     public BlackEnemy() {
         super();
 
-        imageRenderer = new ImageRenderer(Utils.loadAssetImage("enemies/level0/black/0.png"));
+        leftAnmimation = new Animation(0, Utils.loadAssetImage("enemies/level0/black/6.png"));
+        rightAnimation = new Animation(0, Utils.loadAssetImage("enemies/level0/black/5.png"));
 
-        this.set(Background.getInstanceBackground().imageRenderer.image.getWidth() / 2, -imageRenderer.image.getHeight());
+        images = new BufferedImage[5];
+        for (int i = 0; i < 5; i++) {
+            images[i] = Utils.loadAssetImage(String.format("enemies/level0/black/%d.png", i));
+        }
+        straightAnimation = new Animation(7, images);
+        imageRenderer = straightAnimation;
+
+        this.set(200, -images[0].getHeight());
 
         frameCounterBullet = new FrameCounter(150);
         frameCounterMove = new FrameCounter(300);
@@ -40,7 +50,7 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
 
         intanceBlack = this;
 
-        this.boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
+        this.boxCollider = new BoxCollider(images[0].getWidth(), images[0].getHeight());
         this.children.add(boxCollider);
     }
 
@@ -48,6 +58,7 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
     @Override
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
+        imageRenderer = straightAnimation;
         if (this.y <= 100) this.addUp(0, Setting.BLACK_SPEED);
         else {
             if (frameCounterMove.run()) {
@@ -83,14 +94,17 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
     }
 
     private void moveRight() {
+        imageRenderer = rightAnimation;
         this.addUp(Setting.BLACK_SPEED, 0);
         if (this.x >= 300) {
+
             left = false;
             frameCounterMove.reset();
         }
     }
 
     private void moveLeft() {
+        imageRenderer = leftAnmimation;
         this.addUp(-Setting.BLACK_SPEED, 0);
         if (this.x <= 100) {
             left = true;

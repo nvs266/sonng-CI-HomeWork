@@ -1,4 +1,6 @@
-package game.bases;
+package game.bases.renderers;
+
+import game.bases.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,8 +1,11 @@
 package game.backgrounds;
 
 import game.bases.*;
+import game.bases.renderers.Animation;
+import game.bases.renderers.ImageRenderer;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by sonng on 7/18/2017.
@@ -10,15 +13,16 @@ import java.awt.*;
 public class Background extends GameObject implements Setting {
 
     private static Background instanceBackground;
-
+    private BufferedImage image;
     public static Background getInstanceBackground() {
         return instanceBackground;
     }
 
     public Background() {
         super();
-        this.imageRenderer = new ImageRenderer(Utils.loadAssetImage("background/0.png"));
-        set(0, WINDOW_HEIGHT - this.imageRenderer.image.getHeight());
+        image = Utils.loadAssetImage("background/0.png");
+        imageRenderer = new Animation(0,image);
+        set(0, WINDOW_HEIGHT - image.getHeight());
         instanceBackground = this;
     }
 
@@ -30,6 +34,6 @@ public class Background extends GameObject implements Setting {
 
     @Override
     public void render(Graphics2D graphics2D) {
-        graphics2D.drawImage(imageRenderer.image, 0, (int) this.getY(), null);
+        graphics2D.drawImage(image, 0, (int) this.getY(), null);
     }
 }

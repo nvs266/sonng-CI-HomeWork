@@ -1,11 +1,13 @@
 package game.Enemies;
 
-import com.sun.corba.se.spi.activation.ORBPortInfoListHelper;
 import game.Players.Player;
 import game.bases.*;
 import game.bases.physics.PhysicsBody;
+import game.bases.renderers.Animation;
+import game.bases.renderers.ImageRenderer;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 /**
@@ -14,10 +16,9 @@ import java.util.Random;
 public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
 
     public static PinkEnemy intancePinkEnemy = null;
-    private ImageRenderer[] currentImageRenderer;
+    private BufferedImage[] images;
 
     private FrameCounter frameCounterStillStand;
-    private FrameCounter frameCounterChangePicture;
     private FrameCounter frameCounterShoot;
 
     public boolean bulletDiasable = true;
@@ -27,20 +28,13 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
     public PinkEnemy() {
         super();
 
-        currentImageRenderer = new ImageRenderer[4];
+        images = new BufferedImage[4];
         for (int i = 0; i < 4; i++) {
-            currentImageRenderer[i] = new ImageRenderer(Utils.loadAssetImage(String.format("enemies/level0/pink/%d.png", i)));
+            images[i] = Utils.loadAssetImage(String.format("enemies/level0/pink/%d.png", i));
         }
-        imageRenderer = currentImageRenderer[0];
-
-        set(x - imageRenderer.image.getWidth() / 2, y);
+        imageRenderer = new Animation(7, images);
 
         maxY = new Random().nextInt(WINDOW_HEIGHT / 3) + 50;
-
-        frameCounterChangePicture = new FrameCounter(5);
-        frameCounterChangePicture.reset();
-        frameCounterChangePicture.run();
-
 
         frameCounterStillStand = new FrameCounter(50);
         frameCounterStillStand.reset();
@@ -51,27 +45,6 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
 
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
-    }
-
-
-    @Override
-    public void updatePicture() {
-        if (frameCounterChangePicture.run()) {
-            for (int i = 0; i < 4; i++) {
-                if (imageRenderer == currentImageRenderer[i]) {
-                    switch (i) {
-                        case 3:
-                            imageRenderer = currentImageRenderer[0];
-                            break;
-                        default:
-                            imageRenderer = currentImageRenderer[i+1];
-                            break;
-                    }
-                    break;
-                }
-            }
-            frameCounterChangePicture.reset();
-        }
     }
 
     @Override
@@ -118,10 +91,10 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
         if (isOutOfMap()) active = false;
     }
 
-    @Override
-    public void render(Graphics2D graphics2D) {
-        if (this.x < WINDOW_WIDTH /2 - this.imageRenderer.image.getWidth())imageRenderer.render(graphics2D, this.getPosition());
-    }
+//    @Override
+//    public void render(Graphics2D graphics2D) {
+//        if (this.x < WINDOW_WIDTH /2 - this.imageRenderer.image.getWidth())imageRenderer.render(graphics2D, this.getPosition());
+//    }
 
     @Override
     public BoxCollider getBoxCollider() {

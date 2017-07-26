@@ -27,7 +27,7 @@ public class EnemySpawner extends GameObject{
         super.run(parentPosition);
         if (frameCounter.run() && Background.getInstanceBackground().y <= -200) {
             PinkEnemy pinkEnemy = GameObjectPool.recycle(PinkEnemy.class);
-            pinkEnemy.set((int) new Random().nextInt(Background.getInstanceBackground().imageRenderer.image.getWidth() - 20) + 20, 0);
+            pinkEnemy.set((int) new Random().nextInt(400 - 20) + 20, 0);
             pinkEnemy.bulletDiasable = true;
             frameCounter.reset();
         }

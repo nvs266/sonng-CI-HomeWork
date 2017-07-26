@@ -5,25 +5,28 @@ import game.Enemies.PinkEnemy;
 import game.bases.*;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
+import game.bases.renderers.Animation;
+import game.bases.renderers.ImageRenderer;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Created by sonng on 7/12/2017.
  */
 public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
 
-    private ImageRenderer[] imageRenderers;
+    private BufferedImage[] images;
     private FrameCounter frameCounterChangeImage;
 
     public PlayerSpell() {
         super();
         frameCounterChangeImage = new FrameCounter(5);
 
-        imageRenderers = new ImageRenderer[4];
+        images = new BufferedImage[4];
         for (int i = 0; i < 4; i++) {
-            imageRenderers[i] = new ImageRenderer(Utils.loadAssetImage(String.format("player-spells/a/%d.png", i)));
+            images[i] = Utils.loadAssetImage(String.format("player-spells/a/%d.png", i));
         }
-        imageRenderer = imageRenderers[0];
-
+        imageRenderer = new Animation(7, images);
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
     }
@@ -34,27 +37,6 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
         this.y -= SPELL_SPEED;
         hitEnemy();
         if (isOutOfMap()) active = false;
-    }
-
-
-    @Override
-    public void updatePicture() {
-        if (frameCounterChangeImage.run()) {
-            for (int i = 0; i < 4; i++) {
-                if (imageRenderer == imageRenderers[i]) {
-                    switch(i) {
-                        case 3:
-                            imageRenderer = imageRenderers[0];
-                            break;
-                        default:
-                            imageRenderer = imageRenderers[i+1];
-                            break;
-                    }
-                    break;
-                }
-            }
-            frameCounterChangeImage.reset();
-        }
     }
 
     private void hitEnemy() {

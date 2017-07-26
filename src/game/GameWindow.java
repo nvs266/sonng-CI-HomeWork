@@ -38,7 +38,7 @@ public class GameWindow extends JFrame implements Setting {
     }
 
     private void addPlayer() {
-        Player player = new Player(Background.getInstanceBackground().imageRenderer.image.getWidth(), Setting.WINDOW_HEIGHT, inputManager);
+        Player player = new Player(inputManager);
         GameObject.add(player);
     }
 
@@ -101,7 +101,6 @@ public class GameWindow extends JFrame implements Setting {
         backBufferGraphics2D.setColor(Color.BLACK);
         backBufferGraphics2D.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        GameObject.updateAllPicture();
         GameObject.renderAll(backBufferGraphics2D);
 
         Graphics2D g2d = (Graphics2D) this.getGraphics();

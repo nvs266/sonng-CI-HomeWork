@@ -5,9 +5,13 @@ import game.Enemies.PinkEnemy;
 import game.bases.*;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
+import game.bases.renderers.Animation;
+import game.bases.renderers.ImageRenderer;
+
+import java.awt.image.BufferedImage;
 
 public class SphereBullet extends GameObject implements Setting, PhysicsBody{
-    private ImageRenderer[] imageRenderers;
+    private BufferedImage[] images;
     private FrameCounter frameCounterChangeImage;
     public Vector2D velocity;
     private BoxCollider boxCollider;
@@ -16,11 +20,11 @@ public class SphereBullet extends GameObject implements Setting, PhysicsBody{
         super();
         frameCounterChangeImage = new FrameCounter(5);
 
-        imageRenderers = new ImageRenderer[4];
+        images = new BufferedImage[4];
         for (int i = 0; i < 4; i++) {
-            imageRenderers[i] = new ImageRenderer(Utils.loadAssetImage(String.format("sphere-bullets/%d.png", i)));
+            images[i] = Utils.loadAssetImage(String.format("sphere-bullets/%d.png", i));
         }
-        imageRenderer = imageRenderers[0];
+        imageRenderer = new Animation(7, images);
 
         velocity = new Vector2D(0,0);
 
@@ -56,26 +60,6 @@ public class SphereBullet extends GameObject implements Setting, PhysicsBody{
             Player.score++;
             BlackEnemy.life--;
             this.active = false;
-        }
-    }
-
-    @Override
-    public void updatePicture() {
-        if (frameCounterChangeImage.run()) {
-            for (int i = 0; i < 4; i++) {
-                if (imageRenderer == imageRenderers[i]) {
-                    switch(i) {
-                        case 3:
-                            imageRenderer = imageRenderers[0];
-                            break;
-                        default:
-                            imageRenderer = imageRenderers[i+1];
-                            break;
-                    }
-                    break;
-                }
-            }
-            frameCounterChangeImage.reset();
         }
     }
 
