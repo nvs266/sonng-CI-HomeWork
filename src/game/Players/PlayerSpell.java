@@ -1,6 +1,7 @@
 package game.Players;
 
 import game.Enemies.BlackEnemy;
+import game.Enemies.Item;
 import game.Enemies.PinkEnemy;
 import game.bases.*;
 import game.bases.physics.Physics;
@@ -43,6 +44,8 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
         PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
         if (hitPinkEnemy != null) {
             Player.score++;
+            Item item = GameObjectPool.recycle(Item.class);
+            item.set(hitPinkEnemy.getPosition());
             hitPinkEnemy.setActive(false);
             this.active = false;
         }

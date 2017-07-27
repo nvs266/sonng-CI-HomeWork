@@ -4,16 +4,15 @@ import game.bases.*;
 import game.bases.renderers.Animation;
 import game.bases.renderers.ImageRenderer;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Sphere extends GameObject {
 
     private BufferedImage[] images;
-    private FrameCounter frameCounterChangeImage;
 
     public Sphere() {
         super();
-        frameCounterChangeImage = new FrameCounter(5);
 
         images = new BufferedImage[4];
         for (int i = 0; i < 4; i++) {
@@ -28,7 +27,14 @@ public class Sphere extends GameObject {
     }
 
     public void shoot() {
-        SphereBullet sphereBullet = GameObjectPool.recycle(SphereBullet.class);
-        sphereBullet.set(this.screenPosition);
+        if (active) {
+            SphereBullet sphereBullet = GameObjectPool.recycle(SphereBullet.class);
+            sphereBullet.set(this.screenPosition);
+        }
+    }
+
+    @Override
+    public void render(Graphics2D graphics2D) {
+        super.render(graphics2D);
     }
 }

@@ -1,13 +1,12 @@
 package game.Players;
 
 import game.Enemies.BlackEnemy;
+import game.Enemies.Item;
 import game.Enemies.PinkEnemy;
-import game.backgrounds.Background;
 import game.bases.*;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
 import game.bases.renderers.Animation;
-import game.bases.renderers.ImageRenderer;
 import game.inputs.InputManager;
 
 import java.awt.*;
@@ -19,6 +18,8 @@ import java.awt.image.BufferedImage;
 public class Player extends GameObject implements Setting, PhysicsBody {
     public static int life;
     public static int score;
+    private int itemPoint = 0;
+    private boolean sphereActive = false;
 
     private Animation leftAnimation;
     private Animation rightAnimation;
@@ -77,14 +78,6 @@ public class Player extends GameObject implements Setting, PhysicsBody {
 
         instancePlayer = this;
 
-        // sphere
-        sphereLeft = GameObjectPool.recycle(Sphere.class);
-        sphereLeft.set(-20, 0);
-        this.children.add(sphereLeft);
-        sphereRight = GameObjectPool.recycle(Sphere.class);
-        sphereRight.set(20, 0);
-        this.children.add(sphereRight);
-
         boxCollider = new BoxCollider(imageRenderer.getWidth() / 2, imageRenderer.getHeight() / 2);
         this.children.add(boxCollider);
     }
@@ -93,17 +86,34 @@ public class Player extends GameObject implements Setting, PhysicsBody {
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
         move();
-        hitEnemy();
+        hitCheck();
         coolDown();
         if (inputManager.xPressed) castSpell();
     }
 
-    private void hitEnemy() {
+    private void hitCheck() {
         PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
         BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);
         if (hitBlackEnemy != null || hitPinkEnemy != null) {
             Player.life--;
         }
+        Item hitItem = Physics.bodyInRect(this.boxCollider ,Item.class);
+        if (hitItem != null) {
+            hitItem.setActive(false);
+            this.itemPoint++;
+        }
+        if (!sphereActive && this.itemPoint >= 10) {
+            this.sphereLeft = new Sphere();
+            sphereLeft.set(-20, 0);
+            this.children.add(sphereLeft);
+
+            sphereRight = new Sphere();
+            sphereRight.set(20, 0);
+            this.children.add(sphereRight);
+
+            sphereActive = true;
+        }
+
     }
 
     private void castSpell() {
@@ -112,7 +122,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
             playerSpell.set(this.x, this.y - imageRenderer.getHeight());
             spellDisable = true;
         }
-        if (!bulletDisable) {
+        if (!bulletDisable && sphereActive) {
             sphereLeft.shoot();
             sphereRight.shoot();
             bulletDisable = true;

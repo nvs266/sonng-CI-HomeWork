@@ -32,7 +32,7 @@ public class EnemySpawner extends GameObject{
             frameCounter.reset();
         }
 
-        if (blackEnemyDisable) {
+        if (Background.getInstanceBackground().y >= - 50 && blackEnemyDisable) {
             GameObject.add(new BlackEnemy());
             blackEnemyDisable = false;
         }
