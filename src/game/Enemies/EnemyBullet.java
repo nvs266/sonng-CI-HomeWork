@@ -19,13 +19,17 @@ public class EnemyBullet extends GameObject implements Setting {
     public EnemyBullet() {
         super();
 
-        imageRenderer = new Animation(0, Utils.loadAssetImage("enemies/bullets/pink.png"));
-
         frameCounter = new FrameCounter(30);
         frameCounter.reset();
 
+        imageRenderer = new Animation(0, Utils.loadAssetImage("enemies/bullets/pink.png"));
+
         boxCollider = new BoxCollider(imageRenderer.getWidth(), imageRenderer.getHeight());
         this.children.add(boxCollider);
+    }
+
+    public void setImageRenderer(String fileName) {
+        imageRenderer = new Animation(0, Utils.loadAssetImage(fileName));
     }
 
     public void set(float dx, float dy, Vector2D vector2D) {
@@ -41,7 +45,7 @@ public class EnemyBullet extends GameObject implements Setting {
         if (frameCounter.run()) {
             this.addUp(4*dx, 4*dy);
         } else this.addUp(dx,dy);
-        if (isOutOfMap()) active = false;
+        if (imageRenderer != null && isOutOfMap()) active = false;
         hitPlayer();
     }
 

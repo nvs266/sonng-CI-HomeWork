@@ -16,6 +16,7 @@ public class BoxCollider extends GameObject{
     }
 
     public boolean collideWith(BoxCollider other) {
+        if (other == null) return false;
         return ((Math.abs(this.screenPosition.x - other.screenPosition.x) < (this.width + other.width) / 2) &&
                 (Math.abs(this.screenPosition.y - other.screenPosition.y) < (this.height + other.height) / 2) &&
                 other.screenPosition.x > 0 && other.screenPosition.y > 0 && this.screenPosition.x > 0 && this.screenPosition.y > 0);

@@ -61,12 +61,15 @@ public class PinkEnemy extends GameObject implements Setting, PhysicsBody {
 
                 EnemyBullet enemyBullet = GameObjectPool.recycle(EnemyBullet.class);
                 enemyBullet.set(newVector2d.x, newVector2d.y , this.getPosition());
+                enemyBullet.setImageRenderer("enemies/bullets/pink.png");
 
                 EnemyBullet enemyBullet1 = GameObjectPool.recycle(EnemyBullet.class);
                 enemyBullet1.set(vector2D1.x, vector2D1.y, this.getPosition());
+                enemyBullet1.setImageRenderer("enemies/bullets/pink.png");
 
                 EnemyBullet enemyBullet2 = GameObjectPool.recycle(EnemyBullet.class);
                 enemyBullet2.set(vector2D2.x, vector2D2.y, this.getPosition());
+                enemyBullet2.setImageRenderer("enemies/bullets/pink.png");
 
                 bulletDiasable = false;
 

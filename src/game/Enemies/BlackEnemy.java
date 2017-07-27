@@ -77,7 +77,7 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
         if (frameCounter.run()) {
             Vector2D newVector2d = new Vector2D(Player.instancePlayer.x - this.x, Player.instancePlayer.y - this.y);
             newVector2d = newVector2d.nomalize();
-            if (alpha < 2 * Math.PI) {
+            if (alpha <= 2 * Math.PI) {
                 alpha += Math.PI / 20;
             } else {
                 alpha = (float) (Math.PI / 20);
@@ -121,6 +121,7 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
             for (float i = 0; i < 2 * Math.PI; i += Math.PI / 30) {
                 EnemyBullet enemyBullet = GameObjectPool.recycle(EnemyBullet.class);
                 enemyBullet.set((float) (newVector2d.x * Math.cos(i) - newVector2d.y * Math.sin(i)), (float) (newVector2d.x * Math.sin(i) + newVector2d.y * Math.cos(i)), this.getPosition());
+                enemyBullet.setImageRenderer("enemies/bullets/cyan.png");
             }
             bullet1Disable = false;
             frameCounterBullet.reset();
@@ -131,16 +132,19 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
             for (float i = 4; i >= 3; i -= 0.05) {
                 EnemyBullet enemyBullet = GameObjectPool.recycle(EnemyBullet.class);
                 enemyBullet.set(newVector2d.x * i, newVector2d.y * i, this.getPosition());
+                enemyBullet.setImageRenderer("enemies/bullets/red.png");
 
                 EnemyBullet enemyBullet1 = GameObjectPool.recycle(EnemyBullet.class);
                 enemyBullet1.set((float) (newVector2d.x * Math.cos(Math.PI / 30) - newVector2d.y * Math.sin(Math.PI / 30)) * i,
                         (float) (newVector2d.x * Math.sin(Math.PI / 30) + newVector2d.y * Math.cos(Math.PI / 30)) * i,
                             this.getPosition());
+                enemyBullet1.setImageRenderer("enemies/bullets/green.png");
 
                 EnemyBullet enemyBullet2 = GameObjectPool.recycle(EnemyBullet.class);
                 enemyBullet2.set((float) (newVector2d.x * Math.cos(-Math.PI / 30) - newVector2d.y * Math.sin(-Math.PI / 30)) * i,
                         (float) (newVector2d.x * Math.sin(-Math.PI / 30) + newVector2d.y * Math.cos(-Math.PI / 30)) * i,
                         this.getPosition());
+                enemyBullet2.setImageRenderer("enemies/bullets/yellow.png");
             }
             bullet1Disable = true;
             frameCounterBullet.reset();
