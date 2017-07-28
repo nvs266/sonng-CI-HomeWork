@@ -1,5 +1,8 @@
 package game.bases;
 
+import com.sun.media.jfxmedia.MediaPlayer;
+import tklibs.AudioUtils;
+
 /**
  * Created by sonng on 7/17/2017.
  */
@@ -21,6 +24,7 @@ public interface Setting {
     // Subjects
     enum SUBJECTS {PLAYER, BLACK_ENEMY, PINK_ENEMY, BLACK_BULLET, ENEMY_BULLET, BACKGROUND, SPHERE,
         SPHERE_BNULLET, PLAYER_SPELL};
-    // images path
+    // music
+    javafx.scene.media.MediaPlayer pinkExplosive = AudioUtils.playMedia("assets/music/sfx/enemy-explosion.wav");
 
 }

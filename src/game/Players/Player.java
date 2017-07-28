@@ -8,6 +8,7 @@ import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
 import game.bases.renderers.Animation;
 import game.inputs.InputManager;
+import tklibs.AudioUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -101,6 +102,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         if (hitItem != null) {
             hitItem.setActive(false);
             this.itemPoint++;
+            AudioUtils.playMedia("assets/music/sfx/item-collect.wav");
         }
         if (!sphereActive && this.itemPoint >= 10) {
             this.sphereLeft = new Sphere();
@@ -111,6 +113,8 @@ public class Player extends GameObject implements Setting, PhysicsBody {
             sphereRight.set(20, 0);
             this.children.add(sphereRight);
 
+            AudioUtils.playMedia("assets/music/sfx/powerup.wav");
+
             sphereActive = true;
         }
 
@@ -118,6 +122,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
 
     private void castSpell() {
         if (!spellDisable) {
+            AudioUtils.playMedia("assets/music/sfx/player-shoot.wav");
             PlayerSpell playerSpell = GameObjectPool.recycle(PlayerSpell.class);
             playerSpell.set(this.x, this.y - imageRenderer.getHeight());
             spellDisable = true;

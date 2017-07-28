@@ -7,6 +7,8 @@ import game.backgrounds.Background;
 import game.bases.Setting;
 import game.bases.GameObject;
 import game.inputs.InputManager;
+import javafx.scene.media.MediaPlayer;
+import tklibs.AudioUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,25 +69,30 @@ public class GameWindow extends JFrame implements Setting {
     }
 
     public void loop() {
+        AudioUtils.initialize();
+        MediaPlayer mediaPlayer = AudioUtils.playMedia("assets/music/1.mp3");
+        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.setVolume(0.5);
+        mediaPlayer.play();
         while (true) {
             try {
                 Thread.sleep(Setting.FRAME_DELAY);
                 run();
                 render();
-                if (Player.life <= 0) {
-                    Graphics2D g2d = (Graphics2D) this.getGraphics();
-                    g2d.setColor(Color.MAGENTA);
-                    g2d.setFont(new Font("serif", Font.BOLD, 40));
-                    g2d.drawString("YOU LOSE, Score: "+ Player.score, 200, 300 );
-                    break;
-                }
-                if (BlackEnemy.life <= 0) {
-                    Graphics2D g2d = (Graphics2D) this.getGraphics();
-                    g2d.setColor(Color.MAGENTA);
-                    g2d.setFont(new Font("serif", Font.BOLD, 40));
-                    g2d.drawString("YOU WIN :D", 200, 300 );
-                    break;
-                }
+//                if (Player.life <= 0) {
+//                    Graphics2D g2d = (Graphics2D) this.getGraphics();
+//                    g2d.setColor(Color.MAGENTA);
+//                    g2d.setFont(new Font("serif", Font.BOLD, 40));
+//                    g2d.drawString("YOU LOSE, Score: "+ Player.score, 200, 300 );
+//                    break;
+//                }
+//                if (BlackEnemy.life <= 0) {
+//                    Graphics2D g2d = (Graphics2D) this.getGraphics();
+//                    g2d.setColor(Color.MAGENTA);
+//                    g2d.setFont(new Font("serif", Font.BOLD, 40));
+//                    g2d.drawString("YOU WIN :D", 200, 300 );
+//                    break;
+//                }
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

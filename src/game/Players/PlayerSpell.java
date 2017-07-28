@@ -1,14 +1,17 @@
 package game.Players;
 
 import game.Enemies.BlackEnemy;
+import game.Enemies.PinkExplosion;
 import game.Enemies.Item;
 import game.Enemies.PinkEnemy;
 import game.bases.*;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
 import game.bases.renderers.Animation;
-import game.bases.renderers.ImageRenderer;
+import javafx.scene.media.MediaPlayer;
+import tklibs.AudioUtils;
 
+import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
 
 /**
@@ -47,6 +50,9 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
             Item item = GameObjectPool.recycle(Item.class);
             item.set(hitPinkEnemy.getPosition());
             hitPinkEnemy.setActive(false);
+            PinkExplosion explosion = GameObjectPool.recycle(PinkExplosion.class);
+            explosion.init(hitPinkEnemy.getPosition());
+            AudioUtils.playMedia("assets/music/sfx/enemy-explosion.wav");
             this.active = false;
         }
         BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);

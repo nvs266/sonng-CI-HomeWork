@@ -1,12 +1,13 @@
 package game.Players;
 
 import game.Enemies.BlackEnemy;
+import game.Enemies.PinkExplosion;
 import game.Enemies.PinkEnemy;
 import game.bases.*;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
 import game.bases.renderers.Animation;
-import game.bases.renderers.ImageRenderer;
+import tklibs.AudioUtils;
 
 import java.awt.image.BufferedImage;
 
@@ -53,6 +54,9 @@ public class SphereBullet extends GameObject implements Setting, PhysicsBody{
         if (hitPinkEnemy != null) {
             Player.score++;
             hitPinkEnemy.active = false;
+            PinkExplosion explosion = GameObjectPool.recycle(PinkExplosion.class);
+            explosion.init(hitPinkEnemy.getPosition());
+            AudioUtils.playMedia("assets/music/sfx/enemy-explosion.wav");
             this.active = false;
         }
         BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);

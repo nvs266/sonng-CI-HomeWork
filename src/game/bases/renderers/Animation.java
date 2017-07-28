@@ -36,6 +36,11 @@ public class Animation implements Renderer {
     }
 
     @Override
+    public int getIndex() {
+        return imageIndex;
+    }
+
+    @Override
     public float getHeight() {
         return images.get(imageIndex).getHeight();
     }
