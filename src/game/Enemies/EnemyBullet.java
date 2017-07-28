@@ -52,7 +52,7 @@ public class EnemyBullet extends GameObject implements Setting {
     private void hitPlayer() {
         Player hitPlayer = Physics.bodyInRect(this.boxCollider, Player.class);
         if (hitPlayer != null) {
-            Player.life--;
+            Player.instancePlayer.health--;
             this.active = false;
         }
     }

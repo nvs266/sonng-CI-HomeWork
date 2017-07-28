@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
  * Created by sonng on 7/9/2017.
  */
 public class GameWindow extends JFrame implements Setting {
+    public static boolean inGame = true;
 
     BufferedImage backBufferImage;
     Graphics2D backBufferGraphics2D;
@@ -74,29 +75,27 @@ public class GameWindow extends JFrame implements Setting {
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.setVolume(0.5);
         mediaPlayer.play();
-        while (true) {
+        while (inGame) {
             try {
                 Thread.sleep(Setting.FRAME_DELAY);
                 run();
                 render();
-//                if (Player.life <= 0) {
-//                    Graphics2D g2d = (Graphics2D) this.getGraphics();
-//                    g2d.setColor(Color.MAGENTA);
-//                    g2d.setFont(new Font("serif", Font.BOLD, 40));
-//                    g2d.drawString("YOU LOSE, Score: "+ Player.score, 200, 300 );
-//                    break;
-//                }
-//                if (BlackEnemy.life <= 0) {
-//                    Graphics2D g2d = (Graphics2D) this.getGraphics();
-//                    g2d.setColor(Color.MAGENTA);
-//                    g2d.setFont(new Font("serif", Font.BOLD, 40));
-//                    g2d.drawString("YOU WIN :D", 200, 300 );
-//                    break;
-//                }
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        if (Player.instancePlayer.life <= 0) {
+            Graphics2D g2d = (Graphics2D) this.getGraphics();
+            g2d.setColor(Color.MAGENTA);
+            g2d.setFont(new Font("serif", Font.BOLD, 40));
+            g2d.drawString("YOU LOSE, Score: "+ Player.instancePlayer.score, 200, 300 );
+        }
+        if (BlackEnemy.health <= 0) {
+            Graphics2D g2d = (Graphics2D) this.getGraphics();
+            g2d.setColor(Color.MAGENTA);
+            g2d.setFont(new Font("serif", Font.BOLD, 40));
+            g2d.drawString("YOU WIN :D", 200, 300 );
         }
     }
 

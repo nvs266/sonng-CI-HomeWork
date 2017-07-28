@@ -8,10 +8,8 @@ import game.bases.*;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
 import game.bases.renderers.Animation;
-import javafx.scene.media.MediaPlayer;
 import tklibs.AudioUtils;
 
-import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
 
 /**
@@ -46,7 +44,7 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
     private void hitEnemy() {
         PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
         if (hitPinkEnemy != null) {
-            Player.score++;
+            Player.instancePlayer.score++;
             Item item = GameObjectPool.recycle(Item.class);
             item.set(hitPinkEnemy.getPosition());
             hitPinkEnemy.setActive(false);
@@ -57,8 +55,8 @@ public class PlayerSpell extends GameObject implements Setting, PhysicsBody {
         }
         BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);
         if (hitBlackEnemy != null) {
-            Player.score++;
-            BlackEnemy.life--;
+            Player.instancePlayer.score++;
+            BlackEnemy.health--;
             this.active = false;
         }
     }

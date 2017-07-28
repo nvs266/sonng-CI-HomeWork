@@ -17,10 +17,11 @@ import java.awt.image.BufferedImage;
  * Created by sonng on 7/12/2017.
  */
 public class Player extends GameObject implements Setting, PhysicsBody {
-    public static int life;
-    public static int score;
-    private int itemPoint = 0;
-    private boolean sphereActive = false;
+    public int life = 3;
+    public int health = 5;
+    public int score;
+    public int itemPoint = 0;
+    public boolean sphereActive = false;
 
     private Animation leftAnimation;
     private Animation rightAnimation;
@@ -43,7 +44,6 @@ public class Player extends GameObject implements Setting, PhysicsBody {
     public Player(InputManager inputManager) {
         super();
         this.inputManager = inputManager;
-        life = 100;
         score = 0;
 
         //Load Image
@@ -83,8 +83,20 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         this.children.add(boxCollider);
     }
 
+    public void init() {
+        health = 5;
+        itemPoint = 0;
+        active = true;
+    }
+
     @Override
     public void run(Vector2D parentPosition) {
+        if (health <= 0) {
+            PlayerExplosion playerExplosion = new PlayerExplosion();
+            playerExplosion.init(this.getPosition());
+            GameObject.add(playerExplosion);
+            this.active = false;
+        }
         super.run(parentPosition);
         move();
         hitCheck();
@@ -96,7 +108,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
         BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);
         if (hitBlackEnemy != null || hitPinkEnemy != null) {
-            Player.life--;
+            this.health--;
         }
         Item hitItem = Physics.bodyInRect(this.boxCollider ,Item.class);
         if (hitItem != null) {
@@ -104,7 +116,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
             this.itemPoint++;
             AudioUtils.playMedia("assets/music/sfx/item-collect.wav");
         }
-        if (!sphereActive && this.itemPoint >= 10) {
+        if (!sphereActive && this.itemPoint >= 3) {
             this.sphereLeft = new Sphere();
             sphereLeft.set(-20, 0);
             this.children.add(sphereLeft);
@@ -178,15 +190,21 @@ public class Player extends GameObject implements Setting, PhysicsBody {
     public void render(Graphics2D graphics2D) {
         checkStatus();
         super.render(graphics2D);
-        graphics2D.setColor(Color.red);
-        graphics2D.setFont(new Font("serif", Font.BOLD, 30));
-        if (life < 0) life = 0;
-        graphics2D.drawString("Life: " + life, 500, 150);
-        graphics2D.drawString("Score: " + score, 500, 200);
     }
 
     @Override
     public BoxCollider getBoxCollider() {
         return this.boxCollider;
+    }
+
+    public void destruction() {
+        life--;
+        active = false;
+        if (sphereActive) {
+            sphereActive = false;
+            sphereLeft.setActive(false);
+            sphereRight.setActive(false);
+        }
+        itemPoint = 0;
     }
 }

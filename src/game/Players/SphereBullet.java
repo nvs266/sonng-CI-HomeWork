@@ -36,8 +36,8 @@ public class SphereBullet extends GameObject implements Setting, PhysicsBody{
     @Override
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
-        if (BlackEnemy.intanceBlack != null) {
-            Vector2D tartget =  BlackEnemy.intanceBlack.getPosition();
+        if (BlackEnemy.instance != null && BlackEnemy.instance.isActive()) {
+            Vector2D tartget =  BlackEnemy.instance.getPosition();
             velocity = tartget.subtract(this.getPosition()).nomalize().multiply(Setting.SPHERE_BULLET_SPEED);
             this.getPosition().addUp(velocity);
         } else if (PinkEnemy.intancePinkEnemy != null) {
@@ -52,7 +52,7 @@ public class SphereBullet extends GameObject implements Setting, PhysicsBody{
     private void hitEnemy() {
         PinkEnemy hitPinkEnemy = Physics.bodyInRect(this.boxCollider, PinkEnemy.class);
         if (hitPinkEnemy != null) {
-            Player.score++;
+            Player.instancePlayer.score++;
             hitPinkEnemy.active = false;
             PinkExplosion explosion = GameObjectPool.recycle(PinkExplosion.class);
             explosion.init(hitPinkEnemy.getPosition());
@@ -61,8 +61,8 @@ public class SphereBullet extends GameObject implements Setting, PhysicsBody{
         }
         BlackEnemy hitBlackEnemy = Physics.bodyInRect(this.boxCollider, BlackEnemy.class);
         if (hitBlackEnemy != null) {
-            Player.score++;
-            BlackEnemy.life--;
+            Player.instancePlayer.score++;
+            BlackEnemy.health--;
             this.active = false;
         }
     }

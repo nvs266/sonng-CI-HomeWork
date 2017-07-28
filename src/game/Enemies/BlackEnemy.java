@@ -1,11 +1,9 @@
 package game.Enemies;
 
 import game.Players.Player;
-import game.backgrounds.Background;
 import game.bases.*;
 import game.bases.physics.PhysicsBody;
 import game.bases.renderers.Animation;
-import game.bases.renderers.ImageRenderer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,8 +12,8 @@ import java.awt.image.BufferedImage;
  * Created by sonng on 7/19/2017.
  */
 public class BlackEnemy extends GameObject implements PhysicsBody{
-    public static BlackEnemy intanceBlack = null;
-    public static int life = 200;
+    public static BlackEnemy instance = null;
+    public static int health = 100;
     public static float alpha = 0;
     public FrameCounter frameCounterBullet;
     public FrameCounter frameCounterMove;
@@ -48,7 +46,7 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
         frameCounterMove = new FrameCounter(300);
         frameCounter = new FrameCounter(5);
 
-        intanceBlack = this;
+        instance = this;
 
         this.boxCollider = new BoxCollider(images[0].getWidth(), images[0].getHeight());
         this.children.add(boxCollider);
@@ -57,6 +55,13 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
 
     @Override
     public void run(Vector2D parentPosition) {
+        if (health <= 0) {
+            BlackExplosion blackExplosion = new BlackExplosion();
+            blackExplosion.init(this.getPosition());
+            GameObject.add(blackExplosion);
+            this.active = false;
+        }
+
         super.run(parentPosition);
         imageRenderer = straightAnimation;
         if (this.y <= 100) this.addUp(0, Setting.BLACK_SPEED);
@@ -154,10 +159,6 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
     @Override
     public void render(Graphics2D graphics2D) {
         super.render(graphics2D);
-        graphics2D.setColor(Color.BLUE);
-        graphics2D.setFont(new Font("serif", Font.BOLD, 30));
-        if (life < 0) life = 0;
-        graphics2D.drawString("BOSS: "+ life, 500, 100);
     }
 
     @Override

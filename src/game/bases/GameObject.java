@@ -1,9 +1,11 @@
 package game.bases;
 
+import game.Enemies.BlackEnemy;
+import game.GameWindow;
+import game.Players.Player;
 import game.backgrounds.Background;
 import game.bases.physics.Physics;
 import game.bases.physics.PhysicsBody;
-import game.bases.renderers.ImageRenderer;
 import game.bases.renderers.Renderer;
 
 import java.awt.*;
@@ -80,6 +82,21 @@ public class GameObject extends Vector2D implements Setting{
         for (GameObject gameObject: gameObjects) {
             if (gameObject.isActive()) {
                 gameObject.render(graphics2D);
+            }
+        }
+        if (GameWindow.inGame) {
+            graphics2D.setColor(Color.red);
+            graphics2D.setFont(new Font("serif", Font.BOLD, 30));
+            if (Player.instancePlayer.health < 0) Player.instancePlayer.health = 0;
+            graphics2D.drawString("Life: " + Player.instancePlayer.life, 500, 150);
+            graphics2D.drawString("Health: " + Player.instancePlayer.health, 500, 200);
+            graphics2D.drawString("Score: " + Player.instancePlayer.score, 500, 250);
+
+            if (BlackEnemy.instance != null) {
+                graphics2D.setColor(Color.BLUE);
+                graphics2D.setFont(new Font("serif", Font.BOLD, 30));
+                if (BlackEnemy.health <= 0) BlackEnemy.health = 0;
+                graphics2D.drawString("BOSS: "+ BlackEnemy.health, 500, 100);
             }
         }
 
