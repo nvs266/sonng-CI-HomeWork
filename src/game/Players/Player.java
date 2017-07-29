@@ -164,6 +164,15 @@ public class Player extends GameObject implements Setting, PhysicsBody {
             this.x += PLAYER_SPEED;
         }
         this.contraints.make(this.getPosition());
+
+        if (inputManager.shiftPressed && sphereActive) {
+            sphereLeft.set(-15, -15);
+            sphereRight.set(15, -15);
+        } else if (!inputManager.shiftPressed && sphereActive) {
+            sphereLeft.set(-20, 0);
+            sphereRight.set(20, 0);
+        }
+
     }
 
     public void coolDown() {

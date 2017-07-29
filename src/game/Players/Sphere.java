@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 public class Sphere extends GameObject {
 
     private BufferedImage[] images;
+    public static int status;
 
     public Sphere() {
         super();
@@ -23,6 +24,8 @@ public class Sphere extends GameObject {
 
     @Override
     public void run(Vector2D parentPosition) {
+        if (this.y == 0) status = 0;
+        else status = 1;
         super.run(parentPosition);
     }
 
