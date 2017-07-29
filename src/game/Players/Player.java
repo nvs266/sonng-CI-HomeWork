@@ -17,11 +17,11 @@ import java.awt.image.BufferedImage;
  * Created by sonng on 7/12/2017.
  */
 public class Player extends GameObject implements Setting, PhysicsBody {
-    public int life = 3;
-    public int health = 5;
+    public int life;
+    public int health;
     public int score;
-    public int itemPoint = 0;
-    public boolean sphereActive = false;
+    public int itemPoint;
+    public boolean sphereActive;
 
     private Animation leftAnimation;
     private Animation rightAnimation;
@@ -45,6 +45,10 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         super();
         this.inputManager = inputManager;
         score = 0;
+        life = 3;
+        health = 5;
+        itemPoint = 0;
+        sphereActive= false;
 
         //Load Image
         images = new BufferedImage[6];
@@ -79,7 +83,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
 
         instancePlayer = this;
 
-        boxCollider = new BoxCollider(imageRenderer.getWidth() / 2, imageRenderer.getHeight() / 2);
+        boxCollider = new BoxCollider(imageRenderer.getWidth() / 3, imageRenderer.getHeight() / 4);
         this.children.add(boxCollider);
     }
 

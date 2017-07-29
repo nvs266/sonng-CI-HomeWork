@@ -4,8 +4,10 @@ import game.Enemies.BlackEnemy;
 import game.Enemies.EnemySpawner;
 import game.Players.Player;
 import game.backgrounds.Background;
+import game.bases.GameObjectPool;
 import game.bases.Setting;
 import game.bases.GameObject;
+import game.bases.physics.Physics;
 import game.inputs.InputManager;
 import javafx.scene.media.MediaPlayer;
 import tklibs.AudioUtils;
@@ -20,7 +22,6 @@ import java.awt.image.BufferedImage;
  */
 public class GameWindow extends JFrame implements Setting {
     public static boolean inGame = true;
-
     BufferedImage backBufferImage;
     Graphics2D backBufferGraphics2D;
 
@@ -29,6 +30,20 @@ public class GameWindow extends JFrame implements Setting {
     public GameWindow() {
         setupWindow();
 
+        addBackground();
+        addPlayer();
+        GameObject.add(new EnemySpawner());
+
+        setupInputs();
+        this.setVisible(true);
+
+        backBufferImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        backBufferGraphics2D = (Graphics2D) backBufferImage.getGraphics();
+    }
+
+    public void init() {
+        BlackEnemy.instance = null;
+        Player.instancePlayer = null;
         addBackground();
         addPlayer();
         GameObject.add(new EnemySpawner());
@@ -75,28 +90,24 @@ public class GameWindow extends JFrame implements Setting {
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.setVolume(0.5);
         mediaPlayer.play();
-        while (inGame) {
+        while (true) {
             try {
                 Thread.sleep(Setting.FRAME_DELAY);
                 run();
                 render();
-
+                if (!inGame && inputManager.enterPressed) {
+                    inGame = true;
+                    GameObject.clearAll();
+                    GameObjectPool.clearAll();
+                    Physics.clearAll();
+                    init();
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        if (Player.instancePlayer.life <= 0) {
-            Graphics2D g2d = (Graphics2D) this.getGraphics();
-            g2d.setColor(Color.MAGENTA);
-            g2d.setFont(new Font("serif", Font.BOLD, 40));
-            g2d.drawString("YOU LOSE, Score: "+ Player.instancePlayer.score, 200, 300 );
-        }
-        if (BlackEnemy.health <= 0) {
-            Graphics2D g2d = (Graphics2D) this.getGraphics();
-            g2d.setColor(Color.MAGENTA);
-            g2d.setFont(new Font("serif", Font.BOLD, 40));
-            g2d.drawString("YOU WIN :D", 200, 300 );
-        }
+
+
     }
 
     private void run() {

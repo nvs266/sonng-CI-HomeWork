@@ -4,6 +4,8 @@ import game.Players.Player;
 import game.bases.*;
 import game.bases.physics.PhysicsBody;
 import game.bases.renderers.Animation;
+import javafx.scene.media.MediaPlayer;
+import tklibs.AudioUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,7 +15,7 @@ import java.awt.image.BufferedImage;
  */
 public class BlackEnemy extends GameObject implements PhysicsBody{
     public static BlackEnemy instance = null;
-    public static int health = 100;
+    public static int health;
     public static float alpha = 0;
     public FrameCounter frameCounterBullet;
     public FrameCounter frameCounterMove;
@@ -29,6 +31,7 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
 
     public BlackEnemy() {
         super();
+        health = 100;
 
         leftAnmimation = new Animation(0, Utils.loadAssetImage("enemies/level0/black/6.png"));
         rightAnimation = new Animation(0, Utils.loadAssetImage("enemies/level0/black/5.png"));
@@ -58,6 +61,8 @@ public class BlackEnemy extends GameObject implements PhysicsBody{
         if (health <= 0) {
             BlackExplosion blackExplosion = new BlackExplosion();
             blackExplosion.init(this.getPosition());
+            MediaPlayer mediaPlayer = AudioUtils.playMedia("assets/music/sfx/enemy-explosion-big.wav");
+            mediaPlayer.setAutoPlay(true);
             GameObject.add(blackExplosion);
             this.active = false;
         }

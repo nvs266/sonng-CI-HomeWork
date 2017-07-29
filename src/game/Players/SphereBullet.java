@@ -40,7 +40,7 @@ public class SphereBullet extends GameObject implements Setting, PhysicsBody{
             Vector2D tartget =  BlackEnemy.instance.getPosition();
             velocity = tartget.subtract(this.getPosition()).nomalize().multiply(Setting.SPHERE_BULLET_SPEED);
             this.getPosition().addUp(velocity);
-        } else if (PinkEnemy.intancePinkEnemy != null) {
+        } else if (PinkEnemy.intancePinkEnemy != null && PinkEnemy.intancePinkEnemy.isActive()) {
             Vector2D tartget =  PinkEnemy.intancePinkEnemy.getPosition();
             velocity = tartget.subtract(this.getPosition()).nomalize().multiply(Setting.SPHERE_BULLET_SPEED);
             this.getPosition().addUp(velocity);

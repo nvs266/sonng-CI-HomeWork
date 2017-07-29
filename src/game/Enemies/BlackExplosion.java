@@ -5,6 +5,7 @@ import game.bases.GameObject;
 import game.bases.Utils;
 import game.bases.Vector2D;
 import game.bases.renderers.Animation;
+import tklibs.AudioUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

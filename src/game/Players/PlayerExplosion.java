@@ -5,6 +5,8 @@ import game.bases.GameObject;
 import game.bases.Utils;
 import game.bases.Vector2D;
 import game.bases.renderers.Animation;
+import javafx.scene.media.MediaPlayer;
+import tklibs.AudioUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,6 +16,8 @@ public class PlayerExplosion extends GameObject {
 
     public PlayerExplosion() {
         super();
+        MediaPlayer mediaPlayer = AudioUtils.playMedia("assets/music/sfx/player-dead.wav");
+        mediaPlayer.setAutoPlay(true);
         Player.instancePlayer.destruction();
         images = new BufferedImage[16];
         int i = 0;

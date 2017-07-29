@@ -98,6 +98,20 @@ public class GameObject extends Vector2D implements Setting{
                 if (BlackEnemy.health <= 0) BlackEnemy.health = 0;
                 graphics2D.drawString("BOSS: "+ BlackEnemy.health, 500, 100);
             }
+        } else {
+            graphics2D.setColor(Color.MAGENTA);
+            graphics2D.setFont(new Font("serif", Font.BOLD, 40));
+            graphics2D.drawString("Press Enter To Play Again!", 150, 400 );
+        }
+        if (Player.instancePlayer.life <= 0) {
+            graphics2D.setColor(Color.MAGENTA);
+            graphics2D.setFont(new Font("serif", Font.BOLD, 40));
+            graphics2D.drawString("YOU LOSE, Score: "+ Player.instancePlayer.score, 200, 300 );
+        }
+        if (BlackEnemy.health <= 0 && BlackEnemy.instance != null) {
+            graphics2D.setColor(Color.MAGENTA);
+            graphics2D.setFont(new Font("serif", Font.BOLD, 40));
+            graphics2D.drawString("YOU WIN :D", 200, 300 );
         }
 
     }
@@ -108,5 +122,9 @@ public class GameObject extends Vector2D implements Setting{
                 getPosition().y + imageRenderer.getHeight() / 2 < 0 ||
                 getPosition().y - imageRenderer.getHeight() / 2 > WINDOW_HEIGHT) return true;
         return false;
+    }
+
+    public static void clearAll() {
+        gameObjects.clear();
     }
 }

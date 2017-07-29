@@ -20,4 +20,7 @@ public class Physics {
         }
         return null;
     }
+    public static void clearAll() {
+        bodies.clear();
+    }
 }
