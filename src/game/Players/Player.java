@@ -106,7 +106,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         hitCheck();
         coolDown();
         if (inputManager.xPressed) castSpell();
-
+        GameObject.add(new Trail((int)x, (int)y, 0.05f, imageRenderer.getImage()));
     }
 
     private void hitCheck() {

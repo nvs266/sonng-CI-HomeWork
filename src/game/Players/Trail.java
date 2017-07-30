@@ -11,17 +11,14 @@ import java.awt.image.BufferedImage;
 public class Trail extends GameObject {
     private float alpha = 1;
 
-    private Color color;
     private BufferedImage image;
-    private int width, height;
 
     private float life;
 
-    public Trail(int x, int y, Color color, float life) {
+    public Trail(int x, int y, float life, BufferedImage image) {
         super();
         set(x, y);
-        image = Utils.loadAssetImage("players/straight/0.png");
-        this.color = color;
+        this.image = image;
         this.life = life;
     }
 
@@ -40,9 +37,8 @@ public class Trail extends GameObject {
         super.render(g2d);
         g2d.setComposite(makeTransparent(alpha));
 
-        g2d.setColor(color);
         g2d.drawImage(image, (int)x - image.getWidth()/2, (int)y - image.getHeight()/2, null);
-        g2d.setComposite(makeTransparent(1));
+//        g2d.setComposite(makeTransparent(1));
     }
 
     private AlphaComposite makeTransparent(float alpha){

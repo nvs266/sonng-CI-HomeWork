@@ -46,6 +46,11 @@ public class Animation implements Renderer {
     }
 
     @Override
+    public BufferedImage getImage() {
+        return images.get(imageIndex);
+    }
+
+    @Override
     public float getWidth() {
         return images.get(imageIndex).getWidth();
     }
