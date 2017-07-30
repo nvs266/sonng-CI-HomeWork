@@ -106,6 +106,7 @@ public class Player extends GameObject implements Setting, PhysicsBody {
         hitCheck();
         coolDown();
         if (inputManager.xPressed) castSpell();
+
     }
 
     private void hitCheck() {

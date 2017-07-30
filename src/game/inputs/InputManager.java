@@ -18,7 +18,8 @@ public class InputManager {
     public boolean leftPressed;
     public boolean rightPressed;
     public boolean xPressed;
-    public boolean enterPressed = false;
+    public boolean enterPressed;
+    public boolean shiftPressed;
 
     public void keyPressed(KeyEvent keyEvent) {
         switch(keyEvent.getKeyCode()) {
@@ -39,6 +40,9 @@ public class InputManager {
                 break;
             case KeyEvent.VK_ENTER:
                 enterPressed = true;
+                break;
+            case KeyEvent.VK_SHIFT:
+                shiftPressed = true;
                 break;
             default:
                 break;
@@ -64,6 +68,9 @@ public class InputManager {
                 break;
             case KeyEvent.VK_ENTER:
                 enterPressed = false;
+                break;
+            case KeyEvent.VK_SHIFT:
+                shiftPressed = false;
                 break;
             default:
                 break;
