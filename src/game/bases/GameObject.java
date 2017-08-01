@@ -99,6 +99,7 @@ public class GameObject extends Vector2D implements Setting{
                 graphics2D.drawString("BOSS: "+ BlackEnemy.health, 500, 100);
             }
         } else {
+            graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.05f));
             graphics2D.setColor(Color.MAGENTA);
             graphics2D.setFont(new Font("serif", Font.BOLD, 40));
             graphics2D.drawString("Press Enter To Play Again!", 150, 400 );
